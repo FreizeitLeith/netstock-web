@@ -1,0 +1,1 @@
+<h1>Hola, este es el inicio de NetStock</h1>
