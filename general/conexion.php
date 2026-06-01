@@ -12,5 +12,4 @@ if ($conn->connect_error) {
 
 // Establecer charset para evitar problemas con caracteres especiales
 $conn->set_charset("utf8mb4");
-?>
 
