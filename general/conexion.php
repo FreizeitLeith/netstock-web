@@ -1,15 +1,17 @@
 <?php
-$host = 'localhost';
-$user = 'root';
-$password = 'Pollo12frito';
-$database = 'if0_42011820_netstock_db';
+// Esta línea evita el Error 500 y nos obliga a mostrar el texto del error real
+mysqli_report(MYSQLI_REPORT_OFF);
 
-$conn = new mysqli($host, $user, $password, $database);
+$servidor = "localhost";
+$usuario = "root";
+$password = "Pollo12frito";
+$base_datos = "if0_42011820";
 
+// Creamos la conexion
+$conn = new mysqli($servidor, $usuario, $password, $base_datos);
+
+// Verificamos la conexion
 if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+    die("🚨 ALERTA DE SISTEMA: " . $conn->connect_error);
 }
-
-// Establecer charset para evitar problemas con caracteres especiales
-$conn->set_charset("utf8mb4");
-
+?>
