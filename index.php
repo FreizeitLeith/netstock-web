@@ -48,7 +48,7 @@
         <h2>Desarrollado Por</h2>
         <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Diseñado e implementado aplicando los principios de la Teoría de Sistemas, buscando soluciones tecnológicas a problemas del mundo real.</p>
         <div class="card" style="max-width: 400px; margin: 30px auto; background-color: var(--bg-color);">
-            <h3 style="margin-bottom: 5px; color: #7b5db7;">FreizeitLeith</h3>
+            <h3 style="margin-bottom: 5px; color: #835cd1;">FreizeitLeith</h3>
             <p style="color: var(--text-muted); margin-top:0;">Ingeniería de Computación</p>
             <p>"La tecnología como herramienta para el orden."</p>
         </div>
