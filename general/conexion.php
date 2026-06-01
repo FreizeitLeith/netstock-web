@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 $password = '';
-$database = 'netstock_db';
+$database = 'if0_42011820_netstock_db';
 
 $conn = new mysqli($host, $user, $password, $database);
 
