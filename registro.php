@@ -1,3 +1,31 @@
+<?php
+// 1. Conectamos con la base de datos
+require_once 'general/conexion.php';
+
+// 2. Verificamos si el usuario hizo clic en "Registrar"
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // 3. Capturamos los datos del formulario
+    $nombre = $_POST['nombre'];
+    $correo = $_POST['correo'];
+    $rol = $_POST['rol'];
+    $password = $_POST['password'];
+
+    // 4. Creamos la instrucción para guardar en la base de datos
+    $sql = "INSERT INTO usuarios (nombre, correo, rol, password) VALUES ('$nombre', '$correo', '$rol', '$password')";
+
+    // 5. Ejecutamos la instrucción y verificamos si fue exitosa
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>
+                alert('¡Usuario registrado con éxito! Ahora puedes iniciar sesión.');
+                window.location.href = 'login.php';
+              </script>";
+        exit();
+    } else {
+        echo "<script>alert('Hubo un error al registrar: " . $conn->error . "');</script>";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
