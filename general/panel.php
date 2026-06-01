@@ -1,10 +1,12 @@
 <?php
-// --- SIMULADOR DE SESIÓN (Solo para pruebas de diseño) ---
 session_start();
-// CAMBIA la siguiente palabra entre 'Administrador', 'Jefe' o 'Trabajador' para probar las vistas:
-$_SESSION['rol'] = 'Administrador'; 
-$_SESSION['nombre'] = 'FreizeitLeith'; // Tu nombre aquí
-// ---------------------------------------------------------
+
+// Verificamos si el usuario tiene una sesión activa válida
+if (!isset($_SESSION['rol'])) {
+    // Si no tiene rol, significa que no ha iniciado sesión. Lo mandamos al login.
+    header("Location: ../login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,12 +47,6 @@ $_SESSION['nombre'] = 'FreizeitLeith'; // Tu nombre aquí
                 <a href="../productos/listar.php" class="btn-login">Ver Productos</a>
             </div>
 
-            <div class="card">
-                <h3>🔄 Movimientos</h3>
-                <p>Registra entrada o salida de mercancía.</p>
-                <a href="../movimientos/entrada.php" class="btn-login" style="margin-bottom: 10px; display: block;">+ Registrar Entrada</a>
-                <a href="../movimientos/salida.php" class="btn-registro" style="margin-left: 0; display: block;">- Registrar Salida</a>
-            </div>
 
             <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Jefe'): ?>
             
