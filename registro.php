@@ -1,20 +1,17 @@
 <?php
-// 1. Conectamos con la base de datos
+// 1. Conectamos con el motor de la Base de Datos
 require_once 'general/conexion.php';
 
-// 2. Verificamos si el usuario hizo clic en "Registrar"
+// 2. Lógica para guardar los datos cuando se envíe el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // 3. Capturamos los datos del formulario
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
     $rol = $_POST['rol'];
     $password = $_POST['password'];
 
-    // 4. Creamos la instrucción para guardar en la base de datos
     $sql = "INSERT INTO usuarios (nombre, correo, rol, password) VALUES ('$nombre', '$correo', '$rol', '$password')";
 
-    // 5. Ejecutamos la instrucción y verificamos si fue exitosa
     if ($conn->query($sql) === TRUE) {
         echo "<script>
                 alert('¡Usuario registrado con éxito! Ahora puedes iniciar sesión.');
@@ -26,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p style="margin-top: 20px; font-size: 0.9rem;">
             ¿Ya perteneces al equipo? <a href="login.php" style="color: var(--primary-color);">Inicia sesión</a>
         </p>
+        <a href="index.php" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← Volver al inicio</a>
     </div>
 
 </body>
