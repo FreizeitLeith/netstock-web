@@ -3,7 +3,7 @@
 mysqli_report(MYSQLI_REPORT_OFF);
 
 $servidor = "localhost";
-$usuario = "sql104.infinityfree.com";
+$usuario = "root";
 $password = "Pollocon12miel";
 $base_datos = "if0_42011820_netstock_db";
 
