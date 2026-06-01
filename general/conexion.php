@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $user = 'root';
-$password = '';
+$password = 'Pollo12frito';
 $database = 'if0_42011820_netstock_db';
 
 $conn = new mysqli($host, $user, $password, $database);
