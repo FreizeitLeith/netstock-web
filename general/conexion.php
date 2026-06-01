@@ -5,7 +5,7 @@ mysqli_report(MYSQLI_REPORT_OFF);
 $servidor = "localhost";
 $usuario = "root";
 $password = "Pollo12frito";
-$base_datos = "if0_42011820";
+$base_datos = "if0_42011820_netstock_db";
 
 // Creamos la conexion
 $conn = new mysqli($servidor, $usuario, $password, $base_datos);
