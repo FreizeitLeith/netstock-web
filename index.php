@@ -21,6 +21,7 @@
     </header>
 
     <section class="hero">
+        <h1 style="color: var(--primary-color);">NetStock</h1>
         <h1>Combatiendo la Entropía Operativa</h1>
         <p>NetStock es una plataforma digital de gestión de inventario y trazabilidad diseñada para optimizar el flujo de mercancía, garantizando seguridad y eficiencia a través de un control de acceso basado en roles.</p>
         <a href="login.php" class="btn-login" style="display:inline-block; margin-top:20px; font-size:1.2rem;">Acceder al Sistema</a>

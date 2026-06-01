@@ -23,7 +23,6 @@
             <select id="rol" name="rol" required>
                 <option value="Trabajador">Trabajador (Solo Movimientos)</option>
                 <option value="Jefe">Jefe de Turno (Supervisión)</option>
-                <option value="Administrador">Administrador (Control Total)</option>
             </select>
 
             <label for="password">Contraseña Segura</label>
