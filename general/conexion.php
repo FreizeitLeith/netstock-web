@@ -3,8 +3,8 @@
 mysqli_report(MYSQLI_REPORT_OFF);
 
 $servidor = "localhost";
-$usuario = "root";
-$password = "Pollo12frito";
+$usuario = "sql104.infinityfree.com";
+$password = "Pollocon12miel";
 $base_datos = "if0_42011820_netstock_db";
 
 // Creamos la conexion
