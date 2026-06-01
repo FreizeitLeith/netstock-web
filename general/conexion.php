@@ -3,7 +3,7 @@ mysqli_report(MYSQLI_REPORT_OFF);
 
 $servidor = "localhost";
 $usuario = "root";
-$password = "";   // <-- acá debe estar vacío, sin espacios
+$password = "Pollocon12miel";   // <-- acá debe estar vacío, sin espacios
 $base_datos = "if0_42011820_netstock_db";
 
 $conn = new mysqli($servidor, $usuario, $password, $base_datos);
