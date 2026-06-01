@@ -1,8 +1,8 @@
 <?php
 mysqli_report(MYSQLI_REPORT_OFF);
 
-$servidor = "localhost";
-$usuario = "root";
+$servidor = "sql104.infinityfree.com";
+$usuario = "if0_42011820";
 $password = "Pollocon12miel";   // <-- acá debe estar vacío, sin espacios
 $base_datos = "if0_42011820_netstock_db";
 
