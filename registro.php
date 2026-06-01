@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // 1. Conectamos con el motor de la Base de Datos
 require_once 'general/conexion.php';
 
