@@ -1,0 +1,25 @@
+name: Despliegue Automático a InfinityFree
+
+on:
+  push:
+    branches:
+      - main  # Se ejecutará cada vez que subas cambios a la rama 'main'
+
+jobs:
+  deploy:
+    name: Subir archivos por FTP
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🚚 Obtener el código del repositorio
+      uses: actions/checkout@v4
+
+    - name: 📂 Sincronizar archivos vía FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ftpupload.net
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: 21
+        local-dir: ./        # Sube todo el contenido de tu repositorio
+        server-dir: /htdocs/ # Lo guarda dentro de la carpeta pública de InfinityFree
