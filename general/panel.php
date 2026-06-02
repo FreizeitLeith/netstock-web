@@ -29,7 +29,7 @@ if (!isset($_SESSION['rol'])) {
 <body>
 
     <header>
-        <div class="logo">NetStock <span class="badge"><?php echo $_SESSION['rol']; ?></span></div>
+        <div class="logo">NetStock <span style="color: #fff;" class="badge"><?php echo $_SESSION['rol']; ?></span></div>
         <div class="nav-links">
             <span style="color: var(--text-muted); margin-right: 20px;">Hola, <?php echo $_SESSION['nombre']; ?></span>
             <a href="../login.php" style="color: #ff4c4c; border: 1px solid #ff4c4c; padding: 5px 10px; border-radius: 5px;">Cerrar Sesión</a>
