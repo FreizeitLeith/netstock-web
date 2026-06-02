@@ -12,19 +12,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo'];
     $password = $_POST['password'];
 
-    // 5. Le preguntamos a la Base de Datos si existe alguien con esos datos
-    // Nota de ingeniero: Cambia 'usuarios' si tu tabla tiene otro nombre
-    $sql = "SELECT * FROM usuarios WHERE correo = '$correo' AND password = '$password'";
+    // 5. ¡AQUÍ ESTÁ LA CORRECCIÓN! Sincronizamos con 'usuario' y 'contrasena'
+    $sql = "SELECT * FROM usuario WHERE correo = '$correo' AND contrasena = '$password'";
     $resultado = $conn->query($sql);
 
-    // 6. Si el resultado es mayor a 0, significa que encontró al usuario
-    if ($resultado->num_rows > 0) {
+    // 6. Si el resultado devuelve filas, el usuario existe y la clave es correcta
+    if ($resultado && $resultado->num_rows > 0) {
         
         // Extraemos todos los datos de esa fila de la base de datos
         $usuario_db = $resultado->fetch_assoc();
 
-        // 7. Guardamos los datos importantes en la sesión (el carnet del usuario)
-        $_SESSION['usuario_id'] = $usuario_db['id_usuario']; // Asegúrate que el campo ID se llame así
+        // 7. Guardamos los datos importantes en la sesión
+        // NOTA DE INGENIERÍA: Asegúrate en phpMyAdmin si tu llave primaria 
+        // se llama exactamente 'id_usuario' o simplemente 'id'
+        $_SESSION['usuario_id'] = $usuario_db['id_usuario']; 
         $_SESSION['nombre'] = $usuario_db['nombre'];
         $_SESSION['rol'] = $usuario_db['rol'];
 
@@ -33,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
 
     } else {
-        // 9. Si no existe, lo devolvemos al login con una alerta
+        // 9. Si no existe o falló la consulta, lo devolvemos al login con una alerta
         echo "<script>
                 alert('Acceso Denegado: Correo o contraseña incorrectos.');
                 window.location.href='../login.php';
