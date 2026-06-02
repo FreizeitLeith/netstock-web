@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rol = $_POST['rol'];
     $password = $_POST['password'];
 
-    $sql = "INSERT INTO usuarios (nombre, correo, rol, password) VALUES ('$nombre', '$correo', '$rol', '$password')";
+   // Fíjate que cambié 'password' por el nombre exacto de tu columna en la base de datos
+$sql = "INSERT INTO usuarios (nombre, correo, rol, contrasena) VALUES ('$nombre', '$correo', '$rol', '$password')";
 
     if ($conn->query($sql) === TRUE) {
         echo "<script>
