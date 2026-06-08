@@ -36,10 +36,10 @@
             </div>
             <div class="card">
                 <h3>🛡️ Seguridad por Roles</h3>
-                <p>Tres niveles de acceso (Administrador, Jefe, Trabajador) para garantizar que cada usuario solo vea y modifique lo que le corresponde.</p>
+                <p>Tres niveles de acceso (Jefe, Trabajador) para garantizar que cada usuario solo vea y modifique lo que le corresponde.</p>
             </div>
             <div class="card">
-                <h3>🔍 Trazabilidad (Auditoría)</h3>
+                <h3>🔍 Trazabilidad (Movimientos)</h3>
                 <p>Registro automático de cada movimiento realizado en el sistema, respondiendo a la pregunta: ¿Quién hizo qué y cuándo?</p>
             </div>
         </div>
