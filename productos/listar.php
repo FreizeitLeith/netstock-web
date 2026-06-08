@@ -46,8 +46,10 @@ $resultado = $conn->query($sql);
             <a href="listar.php" style="margin-left: 10px; color: var(--text-muted);">Limpiar</a>
         </form>
 
+        <a href="../general/panel.php" class="btn-submit" style="background-color: #6c757d; color: white; text-decoration: none; display: inline-block; margin-bottom: 20px; margin-right: 10px; padding: 8px 15px;">← Volver al Panel</a>
+
         <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
-            <a href="crear.php" class="btn-login" style="margin-bottom: 20px; display: inline-block;">+ Nuevo Producto</a>
+           <a href="crear.php" class="btn-login" style="margin-bottom: 20px; display: inline-block; padding: 8px 15px;">+ Nuevo Producto</a>
         <?php endif; ?>
 
         <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
