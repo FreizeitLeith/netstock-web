@@ -32,7 +32,7 @@ $resultado = $conn->query($sql);
     <div class="main-content" style="margin-left: 260px; padding: 20px;">
         
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-            <h2 style="margin: 0;">🔍 Portal de Auditoría (Historial)</h2>
+            <h2 style="margin: 0;">🔍 Movimientos del Inventario</h2>
             <a href="../general/panel.php" class="btn-submit" style="background-color: #6c757d; color: white; text-decoration: none; padding: 8px 15px; width: auto;">← Volver al Panel</a>
         </div>
         
