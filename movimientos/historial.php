@@ -12,7 +12,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] == 'Trabajador') {
 // JOIN cruzando las 3 tablas basándonos en tu diagrama relacional
 $sql = "SELECT m.id_movimiento, p.nombre_articulo AS producto, u.nombre AS usuario, 
                m.tipo_accion, m.cantidad_afectada, m.fecha_hora 
-        FROM movimiento m
+        FROM movimiento m #la m es tu tabla de movimientos, la que tiene el registro de cada acción
         INNER JOIN producto p ON m.id_producto = p.id_producto
         INNER JOIN usuario u ON m.id_usuario = u.id_usuario
         ORDER BY m.fecha_hora DESC"; 
