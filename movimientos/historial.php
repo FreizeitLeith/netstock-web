@@ -30,40 +30,56 @@ $resultado = $conn->query($sql);
 </head>
 <body>
     <div class="main-content" style="margin-left: 260px; padding: 20px;">
-        <h2>🔍 Historial de Trazabilidad</h2>
-        <p style="color: var(--text-muted);">Registro inmutable de entradas y salidas del sistema.</p>
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+            <h2 style="margin: 0;">🔍 Portal de Auditoría (Historial)</h2>
+            <a href="../general/panel.php" class="btn-submit" style="background-color: #6c757d; color: white; text-decoration: none; padding: 8px 15px; width: auto;">← Volver al Panel</a>
+        </div>
+        
+        <p style="color: var(--text-muted); margin-top: 0; margin-bottom: 20px;">Registro inmutable de entradas y salidas del sistema.</p>
 
-        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left; color: white;">
             <thead style="background-color: var(--surface-color);">
                 <tr>
-                    <th>ID Mov.</th>
-                    <th>Fecha y Hora</th>
-                    <th>Artículo Afectado</th>
-                    <th>Acción</th>
-                    <th>Cantidad</th>
-                    <th>Responsable</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">ID Mov.</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">Fecha y Hora</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">Artículo Afectado</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">Acción</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">Cantidad</th>
+                    <th style="padding: 10px; border-bottom: 2px solid #555;">Usuario Responsable</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($fila = $resultado->fetch_assoc()): ?>
-                <tr>
-                    <td><?php echo $fila['id_movimiento']; ?></td>
-                    <td><?php echo $fila['fecha_hora']; ?></td>
-                    <td><?php echo $fila['producto']; ?></td>
-                    <td>
-                        <span style="color: <?php echo ($fila['tipo_accion'] == 'Entrada') ? '#28a745' : '#dc3545'; ?>; font-weight: bold;">
-                            <?php echo $fila['tipo_accion']; ?>
-                        </span>
-                    </td>
-                    <td><?php echo $fila['cantidad_afectada']; ?></td>
-                    <td><?php echo $fila['usuario']; ?></td>
-                </tr>
-                <?php endwhile; ?>
+                <?php if ($resultado && $resultado->num_rows > 0): ?>
+                    <?php while ($fila = $resultado->fetch_assoc()): ?>
+                    <tr style="border-bottom: 1px solid #444;">
+                        <td style="padding: 10px;"><?php echo $fila['id_movimiento']; ?></td>
+                        <td style="padding: 10px; color: #aaa;"><?php echo date("d/m/Y H:i A", strtotime($fila['fecha_hora'])); ?></td>
+                        <td style="padding: 10px; font-weight: bold;"><?php echo $fila['producto']; ?></td>
+                        
+                        <td style="padding: 10px;">
+                            <?php if ($fila['tipo_accion'] == 'Entrada'): ?>
+                                <span style="background-color: rgba(40, 167, 69, 0.2); color: #28a745; padding: 4px 8px; border-radius: 4px; font-weight: bold;">
+                                    + Entrada
+                                </span>
+                            <?php else: ?>
+                                <span style="background-color: rgba(220, 53, 69, 0.2); color: #dc3545; padding: 4px 8px; border-radius: 4px; font-weight: bold;">
+                                    - Salida
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                        
+                        <td style="padding: 10px; font-size: 1.1rem; font-weight: bold;"><?php echo $fila['cantidad_afectada']; ?></td>
+                        <td style="padding: 10px; color: #ffc107;"><?php echo $fila['usuario']; ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" style="padding: 20px; text-align: center; color: #aaa;">No hay movimientos registrados en el sistema aún.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
-        
-        <br>
-        <a href="../general/panel.php" class="btn-submit" style="text-decoration: none; display: inline-block;">Volver al Panel</a>
     </div>
 </body>
 </html>
