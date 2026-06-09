@@ -82,10 +82,47 @@ if (!isset($_SESSION['rol'])) {
         </div>
 
         <div class="main-content">
-            <h2>Bienvenido al Centro de Operaciones</h2>
-            <p style="color: var(--text-muted); max-width: 600px;">
-                Has iniciado sesión correctamente. Selecciona cualquiera de los módulos habilitados para tu nivel de acceso en el menú lateral izquierdo para comenzar a trabajar.
-            </p>
+            
+            <div style="background-color: var(--surface-color); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 30px;">
+                <h2 style="margin-top: 0; color: var(--text-main); font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -0.5px;">
+                    Bienvenido al Centro de Operaciones
+                </h2>
+                <p style="color: var(--text-muted); max-width: 650px; font-size: 1.05rem; margin-bottom: 0;">
+                    Has iniciado sesión correctamente. Selecciona cualquiera de los módulos habilitados para tu nivel de acceso en el menú lateral izquierdo para comenzar a trabajar de forma segura y eficiente.
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                
+                <div style="background-color: var(--surface-color); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                        Nivel de Acceso
+                    </h3>
+                    <p style="font-size: 1.8rem; font-weight: bold; margin: 10px 0 0 0; color: var(--primary-color);">
+                        <?php echo $_SESSION['rol']; ?>
+                    </p>
+                </div>
+
+                <div style="background-color: var(--surface-color); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                        Usuario Activo
+                    </h3>
+                    <p style="font-size: 1.8rem; font-weight: bold; margin: 10px 0 0 0; color: var(--text-main);">
+                        <?php echo explode(' ', trim($_SESSION['nombre']))[0]; ?>
+                    </p>
+                </div>
+
+                <div style="background-color: var(--surface-color); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                        Estado del Sistema
+                    </h3>
+                    <p style="font-size: 1.8rem; font-weight: bold; margin: 10px 0 0 0; color: #10b981; display: flex; align-items: center; gap: 10px;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981;"></span> En línea
+                    </p>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -128,7 +165,6 @@ if (!isset($_SESSION['rol'])) {
         if(localStorage.getItem('tema') === 'claro') {
             document.documentElement.setAttribute('data-theme', 'light');
         }
-        </script>
     </script>
 
 </body>
