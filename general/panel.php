@@ -122,6 +122,13 @@ if (!isset($_SESSION['rol'])) {
         // Escuchar cambios en el tamaño de la pantalla
         window.addEventListener('resize', checkScreenSize);
         checkScreenSize(); // Ejecutar al cargar
+
+        
+        // Como el sistema es oscuro por defecto, solo verificamos si el usuario prefirió el claro
+        if(localStorage.getItem('tema') === 'claro') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+        </script>
     </script>
 
 </body>

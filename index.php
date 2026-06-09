@@ -68,8 +68,9 @@
     </footer>
 
     <script>
-        if(localStorage.getItem('tema') === 'oscuro') {
-            document.documentElement.setAttribute('data-theme', 'dark');
+        // Como el sistema es oscuro por defecto, solo verificamos si el usuario prefirió el claro
+        if(localStorage.getItem('tema') === 'claro') {
+            document.documentElement.setAttribute('data-theme', 'light');
         }
     </script>
 </body>

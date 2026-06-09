@@ -2,34 +2,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* TEMA CLARO (Estilo Holded - Por Defecto) */
+/* css/estilos.css */
+
+
+/* TEMA OSCURO (Por Defecto - Ideal para el Cibercafé) */
 :root {
-    --bg-color: #f3f4f6; /* Un gris muy clarito para el fondo */
-    --surface-color: #ffffff; /* Blanco puro para las tarjetas y el panel, creando contraste */
+    --bg-color: #111827; 
+    --surface-color: #1f2937; 
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --text-main: #f9fafb; 
+    --text-muted: #9ca3af;
+    --border-color: #374151;
+    --sidebar-bg: #1f2937; 
+    --sidebar-text: #d1d5db;
+    --sidebar-active: #374151;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* TEMA CLARO (Opcional) */
+[data-theme="light"] {
+    --bg-color: #f3f4f6; 
+    --surface-color: #ffffff; 
     --primary-color: #4f46e5; 
     --primary-hover: #4338ca;
-    --text-main: #111827; /* Casi negro para legibilidad */
+    --text-main: #111827; 
     --text-muted: #6b7280;
     --border-color: #e5e7eb;
     --sidebar-bg: #ffffff;
     --sidebar-text: #4b5563;
     --sidebar-active: #f3f4f6;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* TEMA OSCURO */
-[data-theme="dark"] {
-    --bg-color: #111827; /* Azul/gris muy oscuro para el fondo general */
-    --surface-color: #1f2937; /* Un tono un poco más claro para las tarjetas y paneles */
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --text-main: #f9fafb; /* Blanco tiza para buena lectura */
-    --text-muted: #9ca3af;
-    --border-color: #374151;
-    --sidebar-bg: #1f2937; /* Mismo color que la tarjeta para el menú lateral */
-    --sidebar-text: #d1d5db;
-    --sidebar-active: #374151;
-    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 }
 
 body {
