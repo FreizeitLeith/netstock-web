@@ -36,8 +36,8 @@ if (!isset($_SESSION['rol'])) {
                <li><a href="../movimientos/historial.php">🔍 movimientos</a></li>
             <?php endif; ?>
 
-            <?php if($_SESSION['rol'] == 'Administrador'): ?>
-                <li><a href="../productos/crear.php">⚙️ Configuración</a></li>
+            <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+               <li><a href="../general/configuracion.php">⚙️ Configuración</a></li>
             <?php endif; ?>
         </ul>
 
