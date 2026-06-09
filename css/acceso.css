@@ -4,13 +4,15 @@
     background-color: var(--surface-color);
     padding: 40px;
     border-radius: 12px;
-    box-shadow: var(--shadow-md);
+    /* Sombras más pronunciadas para que "flote" y se separe del fondo */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
     border: 1px solid var(--border-color);
     width: 100%;
     max-width: 400px;
     box-sizing: border-box;
 }
 
+/* Resto de estilos igual... */
 .form-group {
     margin-bottom: 20px;
 }
@@ -19,14 +21,14 @@ label {
     display: block;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-main);
+    color: var(--text-main); /* Aseguramos que el texto principal contraste */
     margin-bottom: 6px;
 }
 
 input, select, textarea {
     width: 100%;
     padding: 10px 12px;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color); /* Input ligeramente distinto a la tarjeta */
     color: var(--text-main);
     border: 1px solid var(--border-color);
     border-radius: 6px;
@@ -39,15 +41,10 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); /* Anillo de enfoque estilo Holded */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); 
 }
 
-/* DISEÑO RESPONSIVO FORMULARIOS */
-@media (max-width: 480px) {
-    .card-form {
-        padding: 25px;
-        box-shadow: none;
-        border: none;
-        background-color: transparent;
-    }
+/* Textos secundarios (como "¿No tienes cuenta?") */
+.text-muted {
+    color: var(--text-muted);
 }
