@@ -18,8 +18,7 @@ $resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-// Consulta base (1=1 nos permite concatenar condiciones 'AND' fácilmente)
-// Consulta base (¡AÑADIMOS p.stock_alerta!)
+// Consulta base (Asegúrate de que 'stock_alerta' esté aquí)
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         INNER JOIN categoria c ON p.id_categoria = c.id_categoria
@@ -144,7 +143,9 @@ $resultado = $conn->query($sql);
                 <tbody>
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
-                        <tr class="table-row-clickable" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
+                        
+                        <tr class="table-row-clickable" onclick='openModal(<?php echo $fila["id_producto"]; ?>, <?php echo htmlspecialchars(json_encode($fila["nombre_articulo"]), ENT_QUOTES, "UTF-8"); ?>, <?php echo $fila["cantidad_stock"]; ?>)'>
+                            
                             <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
                             <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
                             <td data-label="Categoría">
@@ -152,26 +153,25 @@ $resultado = $conn->query($sql);
                                     <?php echo $fila['nombre_categoria']; ?>
                                 </span>
                             </td>
-                                <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
+                            
+                            <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
                                 <?php 
                                     $stock_actual = $fila['cantidad_stock'];
-                                    $alerta = $fila['stock_alerta'];
+                                    // Evitamos un error visual si la DB aún no tiene el dato en esa fila
+                                    $alerta = isset($fila['stock_alerta']) ? $fila['stock_alerta'] : 5; 
                                     
-                                    // Si no hay stock
                                     if ($stock_actual == 0) {
                                         echo '<span style="background-color: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> Agotado (0)</span>';
                                     } 
-                                    // Si está en nivel de alerta (ej: quedan 3 y la alerta es 5)
                                     else if ($stock_actual <= $alerta) {
                                         echo '<span style="background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="fa-solid fa-bell"></i> Quedan ' . $stock_actual . '</span>';
                                     } 
-                                    // Si el stock está saludable
                                     else {
                                         echo '<span style="color: #10b981;">' . $stock_actual . '</span>';
                                     }
                                 ?>
-                            </td>                       
-                         </tr>
+                            </td>
+                        </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
