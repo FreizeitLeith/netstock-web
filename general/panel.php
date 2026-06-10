@@ -71,7 +71,7 @@ if (!isset($_SESSION['rol'])) {
                    <li><a href="../movimientos/historial.php"><i class="fa-solid fa-clock-rotate-left"></i> Historial</a></li>
                 <?php endif; ?>
 
-                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'trabajador'): ?>
                    <li><a href="../general/configuracion.php"><i class="fa-solid fa-gear"></i> Soporte</a></li>
                 <?php endif; ?>
             </ul>
