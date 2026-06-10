@@ -11,21 +11,21 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] == 'Trabajador') {
 
 // 2. LÓGICA PARA GUARDAR EL PRODUCTO
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre_articulo = $_POST['nombre_articulo'];
+$nombre_articulo = $_POST['nombre_articulo'];
     $id_categoria = $_POST['id_categoria'];
     $cantidad_stock = $_POST['cantidad_stock'];
+    $stock_alerta = $_POST['stock_alerta']; // NUEVO CAMPO
 
-    // --- NUEVA VALIDACIÓN: Verificar si el producto ya existe ---
+    // --- VALIDACIÓN: Verificar si el producto ya existe ---
     $sql_verificar = "SELECT id_producto FROM producto WHERE nombre_articulo = '$nombre_articulo'";
     $resultado_verificacion = $conn->query($sql_verificar);
 
     if ($resultado_verificacion && $resultado_verificacion->num_rows > 0) {
-        // Si la consulta devuelve resultados, significa que ya hay un producto con ese nombre
         $error_msg = "Error: Ya existe un artículo registrado con el nombre '" . $nombre_articulo . "'.";
     } else {
-        // Si no existe, procedemos a insertar en tu tabla "producto"
-        $sql_insert = "INSERT INTO producto (nombre_articulo, cantidad_stock, id_categoria) 
-                       VALUES ('$nombre_articulo', $cantidad_stock, $id_categoria)";
+        // Insertamos en tu tabla "producto" (incluyendo el stock_alerta)
+        $sql_insert = "INSERT INTO producto (nombre_articulo, cantidad_stock, id_categoria, stock_alerta) 
+                       VALUES ('$nombre_articulo', $cantidad_stock, $id_categoria, $stock_alerta)";
 
         if ($conn->query($sql_insert) === TRUE) {
             echo "<script>
