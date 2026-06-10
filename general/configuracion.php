@@ -1,7 +1,7 @@
 <?php
 session_start();
-//dejamos el acceso tanto para jefe como para trabajador, ya que ambos pueden necesitar soporte
-if (!isset($_SESSION['rol']) || ($_SESSION['rol'] != 'Jefe' && $_SESSION['rol'] != 'trabajador')) {
+// dejar el acceso totalmente libre sin importar el rol, para que cualquier usuario pueda enviar tickets de soporte o sugerencias
+if (!isset($_SESSION['rol'])) {
     header("Location: ../login.php");
     exit();
 }
