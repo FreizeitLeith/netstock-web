@@ -24,9 +24,10 @@ $nombre_articulo = $_POST['nombre_articulo'];
         $error_msg = "Error: Ya existe un artículo registrado con el nombre '" . $nombre_articulo . "'.";
     } else {
         // Insertamos en tu tabla "producto" (incluyendo el stock_alerta)
-        $sql_insert = "INSERT INTO producto (nombre_articulo, cantidad_stock, id_categoria, stock_alerta) 
-                       VALUES ('$nombre_articulo', $cantidad_stock, $id_categoria, $stock_alerta)";
-
+        $codigo_negocio = $_SESSION['codigo_negocio'];
+        $sql_insert = "INSERT INTO producto (nombre_articulo, cantidad_stock, id_categoria, stock_alerta, codigo_negocio) 
+                       VALUES ('$nombre_articulo', $cantidad_stock, $id_categoria, $stock_alerta, '$codigo_negocio')";
+                       
         if ($conn->query($sql_insert) === TRUE) {
             echo "<script>
                     alert('¡Artículo registrado con éxito en el inventario!');

@@ -25,9 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 7. Guardamos los datos importantes en la sesión
         // NOTA DE INGENIERÍA: Asegúrate en phpMyAdmin si tu llave primaria 
         // se llama exactamente 'id_usuario' o simplemente 'id'
-        $_SESSION['usuario_id'] = $usuario_db['id_usuario']; 
+        $_SESSION['usuario_id'] = $usuario_db['id_usuario'];
         $_SESSION['nombre'] = $usuario_db['nombre'];
         $_SESSION['rol'] = $usuario_db['rol'];
+        $_SESSION['codigo_negocio'] = $usuario_db['codigo_negocio']; // <--- NUEVO
 
         // 8. ¡Redirección exitosa al Panel!
         header("Location: panel.php");

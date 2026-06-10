@@ -15,10 +15,15 @@ $resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
+// Modifica el select de las categorías del filtro:
+// Modifica el select de las categorías del filtro:
+$sql_categorias_filtro = "SELECT * FROM categoria WHERE codigo_negocio = '{$_SESSION['codigo_negocio']}'";
+
+// Modifica la consulta base del inventario (Cambia el WHERE 1=1):
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
-        INNER JOIN categoria c ON p.id_categoria = c.id_categoria
-        WHERE 1=1";
+        LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
+        WHERE p.codigo_negocio = '{$_SESSION['codigo_negocio']}'";
 
 if ($busqueda != '') {
     $sql .= " AND (p.nombre_articulo LIKE '%$busqueda%' OR p.cantidad_stock = '$busqueda')";

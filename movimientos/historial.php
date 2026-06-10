@@ -12,11 +12,12 @@ $rol = $_SESSION['rol'];
 
 // Consulta que une los movimientos con el producto afectado y quién lo hizo
 $sql = "SELECT m.id_movimiento, m.tipo_accion, m.cantidad_afectada, m.fecha_hora, 
-               p.nombre_articulo, u.nombre as nombre_usuario
-        FROM movimiento m
-        INNER JOIN producto p ON m.id_producto = p.id_producto
-        INNER JOIN usuario u ON m.id_usuario = u.id_usuario
-        ORDER BY m.fecha_hora DESC";
+                       p.nombre_articulo, u.nombre as nombre_usuario
+                FROM movimiento m
+                INNER JOIN producto p ON m.id_producto = p.id_producto
+                INNER JOIN usuario u ON m.id_usuario = u.id_usuario
+                WHERE p.codigo_negocio = '{$_SESSION['codigo_negocio']}'
+                ORDER BY m.fecha_hora DESC";
 
 $resultado = $conn->query($sql);
 ?>

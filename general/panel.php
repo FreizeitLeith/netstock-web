@@ -87,6 +87,12 @@ if (!isset($_SESSION['rol'])) {
                 <h2 style="margin-top: 0; color: var(--text-main); font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -0.5px;">
                     Bienvenido al Centro de Operaciones
                 </h2>
+                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+            <div style="background-color: rgba(139, 92, 246, 0.1); border: 1px dashed var(--primary-color); padding: 15px; border-radius: 8px; margin-bottom: 30px; display: inline-block;">
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Código de Vinculación para tus Trabajadores:</span><br>
+                <strong style="color: var(--primary-color); font-size: 1.5rem; letter-spacing: 2px;"><?php echo $_SESSION['codigo_negocio']; ?></strong>
+            </div>
+            <?php endif; ?>
                 <p style="color: var(--text-muted); max-width: 650px; font-size: 1.05rem; margin-bottom: 0;">
                     Has iniciado sesión correctamente. Selecciona cualquiera de los módulos habilitados para tu nivel de acceso en el menú lateral izquierdo para comenzar a trabajar de forma segura y eficiente.
                 </p>

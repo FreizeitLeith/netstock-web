@@ -1,28 +1,44 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-// 1. Conectamos con el motor de la Base de Datos
 require_once 'general/conexion.php';
 
-// 2. Lógica para guardar los datos cuando se envíe el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
     $rol = $_POST['rol'];
     $password = $_POST['password'];
+    $codigo_ingresado = isset($_POST['codigo_negocio']) ? trim($_POST['codigo_negocio']) : '';
 
-   // Fíjate que cambié 'password' por el nombre exacto de tu columna en la base de datos
-$sql = "INSERT INTO usuario (nombre, correo, rol, contrasena) VALUES ('$nombre', '$correo', '$rol', '$password')";
+    $codigo_final = "";
+
+    // Lógica de Vinculación SaaS
+    if ($rol == 'Jefe' || $rol == 'Administrador') {
+        // Genera un código aleatorio único de 6 caracteres
+        $codigo_final = 'NS-' . strtoupper(substr(md5(uniqid()), 0, 6));
+    } else {
+        // Es Trabajador, verificamos que el código de su jefe exista
+        $sql_verificar = "SELECT id_usuario FROM usuario WHERE codigo_negocio = '$codigo_ingresado' AND (rol = 'Jefe' OR rol = 'Administrador')";
+        $resultado = $conn->query($sql_verificar);
+        
+        if ($resultado && $resultado->num_rows > 0) {
+            $codigo_final = $codigo_ingresado; // Vinculación exitosa
+        } else {
+            echo "<script>alert('Error: El código de vinculación no es válido o no pertenece a ningún negocio activo.'); window.history.back();</script>";
+            exit();
+        }
+    }
+
+    $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena, codigo_negocio) VALUES ('$nombre', '$correo', '$rol', '$password', '$codigo_final')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "<script>
-                alert('¡Usuario registrado con éxito! Ahora puedes iniciar sesión.');
-                window.location.href = 'login.php';
-              </script>";
-        exit();
+        if($rol == 'Jefe' || $rol == 'Administrador'){
+            echo "<script>alert('¡Registrado! Tu Código de Vinculación para tus trabajadores es: $codigo_final'); window.location.href = 'login.php';</script>";
+        } else {
+            echo "<script>alert('¡Cuenta de Trabajador enlazada con éxito!'); window.location.href = 'login.php';</script>";
+        }
     } else {
-        echo "<script>alert('Hubo un error al registrar: " . $conn->error . "');</script>";
+        echo "<script>alert('Hubo un error al registrar: " . $conn->error . "'); window.history.back();</script>";
     }
 }
 ?>
@@ -31,40 +47,64 @@ $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena) VALUES ('$nombre',
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Personal | NetStock</title>
+    <title>Registro | NetStock</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/acceso.css">
 </head>
-<body style="justify-content: center; display: flex; align-items: center; min-height: 100vh; padding: 20px;">
+<body style="justify-content: center; display: flex; align-items: center; min-height: 100vh;">
 
-    <div class="card" style="max-width: 400px; width: 100%; text-align: center;">
-        <h2 style="color: var(--primary-color); margin-bottom: 5px;">Alta de Personal</h2>
-        <p style="color: var(--text-muted); margin-top: 0;">Registra un nuevo usuario en el sistema</p>
+    <div class="card-form">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: var(--primary-color); margin-bottom: 5px;">Alta de Personal</h2>
+            <p style="color: var(--text-muted); margin-top: 0;">Registra un nuevo usuario en el sistema</p>
+        </div>
 
         <form action="registro.php" method="POST">
-            <label for="nombre">Nombre Completo</label>
-            <input type="text" id="nombre" name="nombre" required placeholder="Ej. Carlos Pérez">
+            <label>Nombre Completo</label>
+            <input type="text" name="nombre" required placeholder="Ej. Carlos Pérez">
 
-            <label for="correo">Correo Electrónico</label>
-            <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com">
+            <label>Correo Electrónico</label>
+            <input type="email" name="correo" required placeholder="correo@ejemplo.com">
 
-            <label for="rol">Rol en el Sistema (Nivel de Acceso)</label>
-            <select id="rol" name="rol" required>
+            <label>Rol en el Sistema</label>
+            <select name="rol" id="rol" required>
                 <option value="Trabajador">Trabajador (Solo Movimientos)</option>
-                <option value="Jefe">Jefe de Turno (Supervisión)</option>
+                <option value="Jefe">Jefe de Sucursal</option>
+                <option value="Administrador">Administrador del Sistema</option>
             </select>
 
-            <label for="password">Contraseña Segura</label>
-            <input type="password" id="password" name="password" required placeholder="Crea una contraseña">
+            <div id="div_codigo">
+                <label style="color: #f59e0b;">Código de Vinculación (Obligatorio)</label>
+                <input type="text" id="codigo_negocio" name="codigo_negocio" placeholder="Ej. NS-A1B2C3" style="border-color: #f59e0b;">
+            </div>
+
+            <label>Contraseña Segura</label>
+            <input type="password" name="password" required placeholder="Crea una contraseña">
 
             <button type="submit" class="btn-submit">Registrar Usuario</button>
         </form>
-
-        <p style="margin-top: 20px; font-size: 0.9rem;">
-            ¿Ya perteneces al equipo? <a href="login.php" style="color: var(--primary-color);">Inicia sesión</a>
-        </p>
-        <a href="index.php" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← Volver al inicio</a>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="login.php" class="text-muted">¿Ya perteneces al equipo? Inicia sesión</a>
+        </div>
     </div>
 
+    <script>
+        const selectRol = document.getElementById('rol');
+        const divCodigo = document.getElementById('div_codigo');
+        const inputCodigo = document.getElementById('codigo_negocio');
+
+        function toggleCodigo() {
+            if(selectRol.value === 'Trabajador') {
+                divCodigo.style.display = 'block';
+                inputCodigo.required = true;
+            } else {
+                divCodigo.style.display = 'none';
+                inputCodigo.required = false;
+                inputCodigo.value = '';
+            }
+        }
+        selectRol.addEventListener('change', toggleCodigo);
+        toggleCodigo(); // Ejecutar al cargar
+    </script>
 </body>
 </html>
