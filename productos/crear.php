@@ -85,9 +85,6 @@ $resultado_categorias = $conn->query($sql_categorias);
                 ?>
             </select>
 
-            <label for="cantidad_stock">Stock Inicial (Cantidad)</label>
-            <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required placeholder="Ej. 10" value="0">
-
             <div class="form-group">
                 <label for="cantidad_stock">Stock Inicial (Cantidad)</label>
                 <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required placeholder="Ej. 10" value="0">
