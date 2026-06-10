@@ -92,7 +92,7 @@ $resultado = $conn->query($sql);
                 
                 <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
                     <div style="display: flex; gap: 10px;">
-                        <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color);"><i class="fa-solid fa-tags"></i> Categorías</a>
+                        <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;"><i class="fa-solid fa-tags"></i> Categorías</a>
                         <a href="crear.php" class="btn-submit"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
                     </div>
                 <?php endif; ?>
@@ -138,13 +138,13 @@ $resultado = $conn->query($sql);
                         <th>Nombre del Artículo</th>
                         <th>Categoría</th>
                         <th style="text-align: right;">Stock Actual</th>
-                    </tr>
+                        <th style="text-align: center; width: 120px;">Acciones</th> </tr>
                 </thead>
                 <tbody>
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                         
-                        <tr class="table-row-clickable" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
+                        <tr>
                             
                             <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
                             <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
@@ -170,11 +170,18 @@ $resultado = $conn->query($sql);
                                     }
                                 ?>
                             </td>
+
+                            <td data-label="Acciones" style="text-align: center;">
+                                <button type="button" class="btn-submit" style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none;" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
+                                    <i class="fa-solid fa-pen-to-square"></i> Gestionar
+                                </button>
+                            </td>
+
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">No se encontraron productos.</td>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">No se encontraron productos.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -221,6 +228,7 @@ $resultado = $conn->query($sql);
         document.getElementById('close-menu').addEventListener('click', () => sidebar.classList.remove('active'));
 
         const modal = document.getElementById('productModal');
+        
         function openModal(id, nombre, stock) {
             document.getElementById('modal-title').innerText = nombre;
             document.getElementById('modal-stock').innerText = stock;
@@ -235,6 +243,7 @@ $resultado = $conn->query($sql);
             }
             modal.classList.add('active');
         }
+
         function closeModal() { modal.classList.remove('active'); }
         window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
     </script>
