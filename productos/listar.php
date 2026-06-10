@@ -18,7 +18,7 @@ $resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-// Consulta base (Asegúrate de que 'stock_alerta' esté aquí)
+// Consulta base (Con stock_alerta incluido)
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         INNER JOIN categoria c ON p.id_categoria = c.id_categoria
@@ -144,7 +144,7 @@ $resultado = $conn->query($sql);
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                         
-                        <tr class="table-row-clickable" onclick='openModal(<?php echo $fila["id_producto"]; ?>, <?php echo htmlspecialchars(json_encode($fila["nombre_articulo"]), ENT_QUOTES, "UTF-8"); ?>, <?php echo $fila["cantidad_stock"]; ?>)'>
+                        <tr class="table-row-clickable" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
                             
                             <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
                             <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
@@ -157,7 +157,6 @@ $resultado = $conn->query($sql);
                             <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
                                 <?php 
                                     $stock_actual = $fila['cantidad_stock'];
-                                    // Evitamos un error visual si la DB aún no tiene el dato en esa fila
                                     $alerta = isset($fila['stock_alerta']) ? $fila['stock_alerta'] : 5; 
                                     
                                     if ($stock_actual == 0) {
