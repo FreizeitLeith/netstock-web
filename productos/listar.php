@@ -10,19 +10,28 @@ if (!isset($_SESSION['rol'])) {
 
 $rol = $_SESSION['rol'];
 
-// Lógica del buscador con los nombres reales de la BD
-$busqueda = "";
-if (isset($_GET['buscar'])) {
-    $busqueda = $_GET['buscar'];
-    $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, c.nombre_categoria 
-            FROM producto p
-            INNER JOIN categoria c ON p.id_categoria = c.id_categoria
-            WHERE p.nombre_articulo LIKE '%$busqueda%' OR p.cantidad_stock = '$busqueda'";
-} else {
-    $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, c.nombre_categoria 
-            FROM producto p
-            INNER JOIN categoria c ON p.id_categoria = c.id_categoria";
+// Obtener todas las categorías para el filtro
+$sql_categorias_filtro = "SELECT * FROM categoria";
+$resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
+
+// Lógica del buscador y filtro combinado
+$busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+$filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+
+// Consulta base (1=1 nos permite concatenar condiciones 'AND' fácilmente)
+$sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, c.nombre_categoria 
+        FROM producto p
+        INNER JOIN categoria c ON p.id_categoria = c.id_categoria
+        WHERE 1=1";
+
+if ($busqueda != '') {
+    $sql .= " AND (p.nombre_articulo LIKE '%$busqueda%' OR p.cantidad_stock = '$busqueda')";
 }
+
+if ($filtro_categoria != '') {
+    $sql .= " AND p.id_categoria = '$filtro_categoria'";
+}
+
 $resultado = $conn->query($sql);
 ?>
 
@@ -36,143 +45,7 @@ $resultado = $conn->query($sql);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/estilos.css">
     <link rel="stylesheet" href="../css/panel.css"> 
-    
-    <style>
-        /* Estilos específicos para la vista estilo Holded */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .search-bar-container {
-            background-color: var(--surface-color);
-            padding: 15px 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .search-input {
-            flex-grow: 1;
-            border: none;
-            background: transparent;
-            color: var(--text-main);
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .table-row-clickable:hover {
-            background-color: var(--sidebar-active);
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        /* ESTILOS DEL MODAL FLOTANTE */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: var(--surface-color);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            position: relative;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .modal-header-badge {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            font-weight: bold;
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
-
-        /* Botones de acción en el Modal */
-        .btn-action-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-add { background-color: #10b981; color: white; flex: 1; }
-        .btn-sub { background-color: #ef4444; color: white; flex: 1; }
-        .btn-add:hover { background-color: #059669; }
-        .btn-sub:hover { background-color: #dc2626; }
-
-        .modal-footer-actions {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .mobile-header {
-            display: none;
-            background-color: var(--sidebar-bg);
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            align-items: center;
-            justify-content: space-between;
-        }
-        .menu-toggle-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        @media (max-width: 768px) {
-            .mobile-header { display: flex; }
-            .sidebar { box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
-        }
-    </style>
+    <link rel="stylesheet" href="../css/inventario.css"> 
 </head>
 <body>
 
@@ -199,12 +72,8 @@ $resultado = $conn->query($sql);
 
             <ul class="sidebar-menu">
                 <li><a href="listar.php" style="background-color: var(--sidebar-active); color: var(--primary-color);"><i class="fa-solid fa-box"></i> Productos</a></li>
-                
                 <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Jefe'): ?>
                    <li><a href="../movimientos/historial.php"><i class="fa-solid fa-clock-rotate-left"></i> Historial</a></li>
-                <?php endif; ?>
-
-                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
                    <li><a href="../general/configuracion.php"><i class="fa-solid fa-gear"></i> Configuración</a></li>
                 <?php endif; ?>
             </ul>
@@ -219,21 +88,37 @@ $resultado = $conn->query($sql);
             <div class="page-header">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <h2 style="margin: 0; font-size: 1.8rem;">Productos</h2>
-                    <i class="fa-solid fa-circle-info" style="color: var(--text-muted); cursor: pointer;" title="Gestión de inventario centralizada"></i>
                 </div>
                 
                 <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
-                    <a href="crear.php" class="btn-submit"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color);"><i class="fa-solid fa-tags"></i> Categorías</a>
+                        <a href="crear.php" class="btn-submit"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
+                    </div>
                 <?php endif; ?>
             </div>
 
             <form method="GET" action="listar.php" class="search-bar-container">
                 <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
                 <input type="text" name="buscar" class="search-input" placeholder="Buscar por nombre o stock..." value="<?php echo htmlspecialchars($busqueda); ?>">
-                <?php if(!empty($busqueda)): ?>
-                    <a href="listar.php" style="color: var(--text-muted); text-decoration: none;"><i class="fa-solid fa-xmark"></i></a>
+                
+                <select name="categoria" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Todas las categorías</option>
+                    <?php 
+                    if ($resultado_categorias_filtro && $resultado_categorias_filtro->num_rows > 0) {
+                        while ($cat = $resultado_categorias_filtro->fetch_assoc()) {
+                            $selected = ($filtro_categoria == $cat['id_categoria']) ? 'selected' : '';
+                            echo '<option value="' . $cat['id_categoria'] . '" ' . $selected . '>' . $cat['nombre_categoria'] . '</option>';
+                        }
+                    }
+                    ?>
+                </select>
+
+                <?php if(!empty($busqueda) || !empty($filtro_categoria)): ?>
+                    <a href="listar.php" style="color: var(--text-muted); text-decoration: none; margin-left: 10px;" title="Limpiar Filtros"><i class="fa-solid fa-xmark"></i></a>
                 <?php endif; ?>
-                <button type="submit" style="display: none;">Buscar</button> </form>
+                <button type="submit" style="display: none;">Buscar</button>
+            </form>
 
             <table style="width: 100%; text-align: left;">
                 <thead>
@@ -248,27 +133,19 @@ $resultado = $conn->query($sql);
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                         <tr class="table-row-clickable" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
-                            <td data-label="ID" style="color: var(--text-muted); font-weight: bold;">
-                                <?php echo $fila['id_producto']; ?>
-                            </td>
-                            <td data-label="Artículo" style="font-weight: 500;">
-                                <?php echo $fila['nombre_articulo']; ?>
-                            </td>
+                            <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
+                            <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
                             <td data-label="Categoría">
                                 <span style="background-color: var(--bg-color); padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; border: 1px solid var(--border-color);">
                                     <?php echo $fila['nombre_categoria']; ?>
                                 </span>
                             </td>
-                            <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
-                                <?php echo $fila['cantidad_stock']; ?>
-                            </td>
+                            <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;"><?php echo $fila['cantidad_stock']; ?></td>
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                                No se encontraron productos.
-                            </td>
+                            <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">No se encontraron productos.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -290,17 +167,12 @@ $resultado = $conn->query($sql);
 
             <form action="modificar_stock.php" method="POST">
                 <input type="hidden" name="id_producto" id="modal-id">
-                
                 <label style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted);">Cantidad a mover:</label>
                 <input type="number" name="cantidad_afectada" min="1" required style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; font-size: 1rem; margin-bottom: 5px;">
                 
                 <div class="btn-action-group">
-                    <button type="submit" name="accion" value="Entrada" class="btn-submit btn-add">
-                        <i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i> Agregar
-                    </button>
-                    <button type="submit" name="accion" value="Salida" class="btn-submit btn-sub">
-                        <i class="fa-solid fa-arrow-turn-up fa-rotate-90"></i> Disminuir
-                    </button>
+                    <button type="submit" name="accion" value="Entrada" class="btn-submit btn-add"><i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i> Agregar</button>
+                    <button type="submit" name="accion" value="Salida" class="btn-submit btn-sub"><i class="fa-solid fa-arrow-turn-up fa-rotate-90"></i> Disminuir</button>
                 </div>
             </form>
 
@@ -314,56 +186,28 @@ $resultado = $conn->query($sql);
     </div>
 
     <script>
-        // Tema
-        if(localStorage.getItem('tema') === 'claro') {
-            document.documentElement.setAttribute('data-theme', 'light');
-        }
-
-        // Lógica del Menú Móvil
+        if(localStorage.getItem('tema') === 'claro') { document.documentElement.setAttribute('data-theme', 'light'); }
         const sidebar = document.getElementById('sidebar');
-        const openBtn = document.getElementById('open-menu');
-        const closeBtn = document.getElementById('close-menu');
+        document.getElementById('open-menu').addEventListener('click', () => sidebar.classList.add('active'));
+        document.getElementById('close-menu').addEventListener('click', () => sidebar.classList.remove('active'));
 
-        openBtn.addEventListener('click', () => sidebar.classList.add('active'));
-        closeBtn.addEventListener('click', () => sidebar.classList.remove('active'));
-
-        // ==========================================
-        // LÓGICA DEL MODAL FLOTANTE
-        // ==========================================
         const modal = document.getElementById('productModal');
-        
         function openModal(id, nombre, stock) {
-            // 1. Rellenar los textos visuales
             document.getElementById('modal-title').innerText = nombre;
             document.getElementById('modal-stock').innerText = stock;
             document.getElementById('modal-initial').innerText = nombre.charAt(0).toUpperCase();
-
-            // 2. Rellenar el input oculto para el formulario de stock
             document.getElementById('modal-id').value = id;
-
-            // 3. Actualizar los enlaces de Editar y Eliminar (Solo si existen en el DOM)
+            
             const editLink = document.getElementById('modal-edit-link');
             const deleteLink = document.getElementById('modal-delete-link');
-            
             if(editLink && deleteLink) {
                 editLink.href = 'editar.php?id=' + id;
                 deleteLink.href = 'eliminar.php?id=' + id;
             }
-
-            // 4. Mostrar el Modal
             modal.classList.add('active');
         }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-
-        // Cerrar el modal si se hace clic afuera de la caja
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+        function closeModal() { modal.classList.remove('active'); }
+        window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
     </script>
 </body>
 </html>
