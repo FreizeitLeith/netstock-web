@@ -1,11 +1,10 @@
 <?php
 session_start();
-// Validamos que el usuario haya iniciado sesión y no sea Trabajador
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] == 'Trabajador') {
-    echo "<script>alert('Acceso Denegado.'); window.location.href='panel.php';</script>";
+//dejamos el acceso tanto para jefe como para trabajador, ya que ambos pueden necesitar soporte
+if (!isset($_SESSION['rol']) || ($_SESSION['rol'] != 'Jefe' && $_SESSION['rol'] != 'trabajador')) {
+    header("Location: ../login.php");
     exit();
 }
-
 // Simulamos el envío del ticket si se envió el formulario
 $mensaje_exito = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['enviar_ticket'])) {
