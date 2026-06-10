@@ -17,27 +17,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_articulo = $_POST['nombre_articulo'];
     $id_categoria = $_POST['id_categoria'];
     $cantidad_stock = $_POST['cantidad_stock'];
+    $stock_alerta = $_POST['stock_alerta']; // NUEVO CAMPO
 
-    // Validar que no exista OTRO producto distinto con el mismo nombre
+    // Validar duplicados
     $sql_verificar = "SELECT id_producto FROM producto WHERE nombre_articulo = '$nombre_articulo' AND id_producto != $id_producto";
     $resultado_verificacion = $conn->query($sql_verificar);
 
     if ($resultado_verificacion && $resultado_verificacion->num_rows > 0) {
         $error_msg = "Error: Ya existe otro artículo registrado con el nombre '" . $nombre_articulo . "'.";
-        
-        // Mantenemos los datos temporales para que no se borre lo que el usuario escribió si hay error
         $producto_actual = [
             'id_producto' => $id_producto,
             'nombre_articulo' => $nombre_articulo,
             'id_categoria' => $id_categoria,
-            'cantidad_stock' => $cantidad_stock
+            'cantidad_stock' => $cantidad_stock,
+            'stock_alerta' => $stock_alerta // Mantenemos el dato temporal
         ];
     } else {
-        // Actualizamos los datos en la tabla
+        // Actualizamos los datos en la tabla (incluyendo stock_alerta)
         $sql_update = "UPDATE producto SET 
                         nombre_articulo = '$nombre_articulo', 
                         id_categoria = $id_categoria, 
-                        cantidad_stock = $cantidad_stock 
+                        cantidad_stock = $cantidad_stock,
+                        stock_alerta = $stock_alerta
                        WHERE id_producto = $id_producto";
 
         if ($conn->query($sql_update) === TRUE) {
