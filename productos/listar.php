@@ -2,7 +2,6 @@
 session_start();
 require_once '../general/conexion.php'; 
 
-// Validar que el usuario esté logueado
 if (!isset($_SESSION['rol'])) {
     header("Location: ../login.php");
     exit();
@@ -10,15 +9,12 @@ if (!isset($_SESSION['rol'])) {
 
 $rol = $_SESSION['rol'];
 
-// Obtener todas las categorías para el filtro
 $sql_categorias_filtro = "SELECT * FROM categoria";
 $resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 
-// Lógica del buscador y filtro combinado
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-// Consulta base
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         INNER JOIN categoria c ON p.id_categoria = c.id_categoria
@@ -41,7 +37,6 @@ $resultado = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos | NetStock</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/estilos.css">
     <link rel="stylesheet" href="../css/panel.css"> 
@@ -99,7 +94,6 @@ $resultado = $conn->query($sql);
             </div>
 
             <form method="GET" action="listar.php" class="filter-search-row">
-                
                 <div class="modern-select-container">
                     <select name="categoria" class="modern-select" onchange="this.form.submit()">
                         <option value="">🏷️ Todas las categorías</option>
@@ -172,13 +166,9 @@ $resultado = $conn->query($sql);
                             </td>
 
                             <td data-label="Acciones" style="text-align: center;">
-                                <button type="button" class="btn-submit btn-abrir-modal" 
-                                        style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none;"
-                                        data-id="<?php echo $fila['id_producto']; ?>"
-                                        data-nombre="<?php echo htmlspecialchars($fila['nombre_articulo'], ENT_QUOTES, 'UTF-8'); ?>"
-                                        data-stock="<?php echo $fila['cantidad_stock']; ?>">
+                                <a href="gestionar.php?id=<?php echo $fila['id_producto']; ?>" class="btn-submit" style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; text-decoration: none; display: inline-block;">
                                     <i class="fa-solid fa-pen-to-square"></i> Gestionar
-                                </button>
+                                </a>
                             </td>
 
                         </tr>
@@ -193,81 +183,11 @@ $resultado = $conn->query($sql);
         </div>
     </div>
 
-    <div class="modal-overlay" id="productModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div style="display: flex; align-items: center; margin-bottom: 25px;">
-                <div class="modal-header-badge" id="modal-initial">P</div>
-                <div>
-                    <h3 id="modal-title" style="margin: 0; font-size: 1.5rem; color: var(--text-main);">Nombre Producto</h3>
-                    <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">Stock Actual: <strong id="modal-stock" style="color: var(--text-main);">0</strong></p>
-                </div>
-            </div>
-
-            <form action="modificar_stock.php" method="POST">
-                <input type="hidden" name="id_producto" id="modal-id">
-                <label style="display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted);">Cantidad a mover:</label>
-                <input type="number" name="cantidad_afectada" min="1" required style="width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; font-size: 1rem; margin-bottom: 5px;">
-                
-                <div class="btn-action-group">
-                    <button type="submit" name="accion" value="Entrada" class="btn-submit btn-add"><i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i> Agregar</button>
-                    <button type="submit" name="accion" value="Salida" class="btn-submit btn-sub"><i class="fa-solid fa-arrow-turn-up fa-rotate-90"></i> Disminuir</button>
-                </div>
-            </form>
-
-            <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
-            <div class="modal-footer-actions">
-                <a href="#" id="modal-edit-link" style="color: var(--primary-color); font-weight: 500; text-decoration: none;"><i class="fa-solid fa-pen-to-square"></i> Editar Producto</a>
-                <a href="#" id="modal-delete-link" style="color: #ef4444; font-weight: 500; text-decoration: none;" onclick="return confirm('¿Seguro que deseas eliminar este artículo?');"><i class="fa-solid fa-trash-can"></i> Eliminar</a>
-            </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
     <script>
         if(localStorage.getItem('tema') === 'claro') { document.documentElement.setAttribute('data-theme', 'light'); }
         const sidebar = document.getElementById('sidebar');
         document.getElementById('open-menu').addEventListener('click', () => sidebar.classList.add('active'));
         document.getElementById('close-menu').addEventListener('click', () => sidebar.classList.remove('active'));
-
-        // ===============================================
-        // NUEVA LÓGICA DE JAVASCRIPT A PRUEBA DE FALLOS
-        // ===============================================
-        const modal = document.getElementById('productModal');
-        const botonesGestionar = document.querySelectorAll('.btn-abrir-modal');
-
-        // A cada botón de la tabla le decimos qué hacer cuando le dan clic
-        botonesGestionar.forEach(boton => {
-            boton.addEventListener('click', function() {
-                // Capturamos los datos ocultos dentro del botón
-                const id = this.getAttribute('data-id');
-                const nombre = this.getAttribute('data-nombre');
-                const stock = this.getAttribute('data-stock');
-
-                // Rellenamos el modal
-                document.getElementById('modal-title').innerText = nombre;
-                document.getElementById('modal-stock').innerText = stock;
-                document.getElementById('modal-initial').innerText = nombre.charAt(0).toUpperCase();
-                document.getElementById('modal-id').value = id;
-                
-                // Actualizamos los enlaces de Editar y Eliminar
-                const editLink = document.getElementById('modal-edit-link');
-                const deleteLink = document.getElementById('modal-delete-link');
-                if(editLink && deleteLink) {
-                    editLink.href = 'editar.php?id=' + id;
-                    deleteLink.href = 'eliminar.php?id=' + id;
-                }
-
-                // Hacemos visible el formulario flotante
-                modal.classList.add('active');
-            });
-        });
-
-        function closeModal() { modal.classList.remove('active'); }
-        
-        // Cierra el modal al hacer clic en lo oscuro de afuera
-        window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
     </script>
 </body>
 </html>
