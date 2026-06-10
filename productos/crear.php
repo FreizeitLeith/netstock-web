@@ -88,6 +88,17 @@ $resultado_categorias = $conn->query($sql_categorias);
             <label for="cantidad_stock">Stock Inicial (Cantidad)</label>
             <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required placeholder="Ej. 10" value="0">
 
+            <div class="form-group">
+                <label for="cantidad_stock">Stock Inicial (Cantidad)</label>
+                <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required placeholder="Ej. 10" value="0">
+            </div>
+
+            <div class="form-group">
+                <label for="stock_alerta">Stock de Alerta (Punto de Reorden) <i class="fa-solid fa-bell" style="color: #f59e0b;"></i></label>
+                <p style="margin-top: -5px; font-size: 0.8rem; color: var(--text-muted);">Te avisaremos cuando el stock llegue a esta cantidad.</p>
+                <input type="number" id="stock_alerta" name="stock_alerta" min="0" required placeholder="Ej. 5" value="5">
+            </div>
+            
             <button type="submit" class="btn-submit" style="margin-top: 15px;">Guardar Producto</button>
         </form>
 
