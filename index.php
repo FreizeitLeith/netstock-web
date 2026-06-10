@@ -20,19 +20,19 @@
         </div>
     </header>
 
-    <section class="hero" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 50px; text-align: left; max-width: 1200px; margin: 0 auto;">
-        <div style="flex: 1; min-width: 300px;">
-            <h1 style="color: var(--primary-color); margin-bottom: 0;">NetStock</h1>
-            <h1 style="margin-top: 5px;">Combatiendo la Entropía Operativa</h1>
-            <p>Plataforma digital de gestión de inventario y trazabilidad diseñada para optimizar el flujo de mercancía, garantizando seguridad y eficiencia a través de un control de acceso basado en roles.</p>
-            <a href="login.php" class="btn-login" style="font-size:1.1rem; margin-top: 20px;">Acceder al Sistema</a>
+    <section class="hero" style="display: flex; align-items: center; justify-content: center; gap: 50px; text-align: left; max-width: 1200px; margin: 0 auto;">
+        
+        <div style="flex: 1;">
+            <h1 style="color: var(--primary-color);">NetStock</h1>
+            <h1>Combatiendo la Entropía Operativa</h1>
+            <p style="margin: 0 0 30px 0;">NetStock es una plataforma digital de gestión de inventario y trazabilidad diseñada para optimizar el flujo de mercancía, garantizando seguridad y eficiencia a través de un control de acceso basado en roles.</p>
+            <a href="login.php" class="btn-login" style="display:inline-block; font-size:1.1rem;">Acceder al Sistema</a>
         </div>
-        <div style="flex: 1; text-align: center; min-width: 300px;">
-            <div style="background: var(--surface-color); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
-                <i class="fa-solid fa-chart-line" style="font-size: 5rem; color: var(--primary-color);"></i>
-                <h3 style="margin-top: 20px;">Gestión en la Nube</h3>
-            </div>
+
+        <div style="flex: 1; text-align: right;">
+            <img src="img/dashboard-preview.png" alt="Vista previa de NetStock" style="max-width: 100%; width: 550px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: perspective(1000px) rotateY(-10deg); transition: transform 0.5s ease;">
         </div>
+
     </section>
 
     <section id="alcances">
