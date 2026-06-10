@@ -98,26 +98,37 @@ $resultado = $conn->query($sql);
                 <?php endif; ?>
             </div>
 
-            <form method="GET" action="listar.php" class="search-bar-container">
-                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                <input type="text" name="buscar" class="search-input" placeholder="Buscar por nombre o stock..." value="<?php echo htmlspecialchars($busqueda); ?>">
+            <form method="GET" action="listar.php" class="filter-search-row">
                 
-                <select name="categoria" class="filter-select" onchange="this.form.submit()">
-                    <option value="">Todas las categorías</option>
-                    <?php 
-                    if ($resultado_categorias_filtro && $resultado_categorias_filtro->num_rows > 0) {
-                        while ($cat = $resultado_categorias_filtro->fetch_assoc()) {
-                            $selected = ($filtro_categoria == $cat['id_categoria']) ? 'selected' : '';
-                            echo '<option value="' . $cat['id_categoria'] . '" ' . $selected . '>' . $cat['nombre_categoria'] . '</option>';
+                <div class="modern-select-container">
+                    <select name="categoria" class="modern-select" onchange="this.form.submit()">
+                        <option value="">🏷️ Todas las categorías</option>
+                        <?php 
+                        if ($resultado_categorias_filtro && $resultado_categorias_filtro->num_rows > 0) {
+                            while ($cat = $resultado_categorias_filtro->fetch_assoc()) {
+                                $selected = ($filtro_categoria == $cat['id_categoria']) ? 'selected' : '';
+                                echo '<option value="' . $cat['id_categoria'] . '" ' . $selected . '>' . $cat['nombre_categoria'] . '</option>';
+                            }
                         }
-                    }
-                    ?>
-                </select>
+                        ?>
+                    </select>
+                    <i class="fa-solid fa-chevron-down modern-select-icon"></i>
+                </div>
 
-                <?php if(!empty($busqueda) || !empty($filtro_categoria)): ?>
-                    <a href="listar.php" style="color: var(--text-muted); text-decoration: none; margin-left: 10px;" title="Limpiar Filtros"><i class="fa-solid fa-xmark"></i></a>
-                <?php endif; ?>
-                <button type="submit" style="display: none;">Buscar</button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="modern-search">
+                        <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+                        <input type="text" name="buscar" placeholder="Buscar artículo o stock..." value="<?php echo htmlspecialchars($busqueda); ?>" autocomplete="off">
+                    </div>
+                    
+                    <?php if(!empty($busqueda) || !empty($filtro_categoria)): ?>
+                        <a href="listar.php" class="btn-submit" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px 15px; text-decoration: none; box-shadow: none;" title="Limpiar Filtros">
+                            <i class="fa-solid fa-eraser"></i>
+                        </a>
+                    <?php endif; ?>
+                    
+                    <button type="submit" style="display: none;">Buscar</button>
+                </div>
             </form>
 
             <table style="width: 100%; text-align: left;">
