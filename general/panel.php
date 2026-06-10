@@ -72,7 +72,7 @@ if (!isset($_SESSION['rol'])) {
                 <?php endif; ?>
 
                 <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
-                   <li><a href="../general/configuracion.php"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+                   <li><a href="../general/configuracion.php"><i class="fa-solid fa-gear"></i> Soporte</a></li>
                 <?php endif; ?>
             </ul>
 

@@ -70,7 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <select name="rol" id="rol" required>
                 <option value="Trabajador">Trabajador (Solo Movimientos)</option>
                 <option value="Jefe">Jefe de Sucursal</option>
-                <option value="Administrador">Administrador del Sistema</option>
             </select>
 
             <div id="div_codigo">
