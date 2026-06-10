@@ -121,10 +121,17 @@ $resultado_categorias = $conn->query($sql_categorias);
                 ?>
             </select>
 
-            <label for="cantidad_stock">Stock Actual (Ajuste Manual)</label>
-            <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required 
-                   value="<?php echo $producto_actual['cantidad_stock']; ?>">
+           <div class="form-group">
+                <label for="cantidad_stock">Stock Actual (Ajuste Manual)</label>
+                <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required 
+                       value="<?php echo $producto_actual['cantidad_stock']; ?>">
+            </div>
 
+            <div class="form-group">
+                <label for="stock_alerta">Stock de Alerta <i class="fa-solid fa-bell" style="color: #f59e0b;"></i></label>
+                <input type="number" id="stock_alerta" name="stock_alerta" min="0" required 
+                       value="<?php echo isset($producto_actual['stock_alerta']) ? $producto_actual['stock_alerta'] : '5'; ?>">
+            </div>
             <button type="submit" class="btn-submit" style="margin-top: 15px; background-color: #ffc107; color: #000;">Guardar Cambios</button>
         </form>
 
