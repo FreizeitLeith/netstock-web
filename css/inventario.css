@@ -1,0 +1,85 @@
+/* =========================================
+   BARRA DE BÚSQUEDA Y FILTRO MODERNO
+   ========================================= */
+.filter-search-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+    flex-wrap: wrap; /* Permite que se adapte si la pantalla es pequeña */
+}
+
+/* Diseño del Filtro tipo Botón Desplegable */
+.modern-select-container {
+    position: relative;
+    display: inline-block;
+}
+
+.modern-select {
+    appearance: none; /* Quita la flecha fea por defecto del navegador */
+    -webkit-appearance: none;
+    background-color: var(--surface-color);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 10px 45px 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.modern-select:hover {
+    border-color: var(--primary-color);
+}
+
+.modern-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.modern-select option {
+    background-color: var(--surface-color);
+    color: var(--text-main);
+}
+
+/* Flecha personalizada para el botón desplegable */
+.modern-select-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none; /* Para que los clics pasen a través del ícono al select */
+}
+
+/* Diseño de la Barra de Búsqueda */
+.modern-search {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-color); /* Un tono más oscuro que la tarjeta */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 15px;
+    width: 320px;
+    transition: all 0.2s ease;
+}
+
+.modern-search:focus-within {
+    border-color: var(--primary-color);
+    background-color: var(--surface-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.modern-search input {
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    width: 100%;
+    outline: none;
+    margin-left: 10px;
+    font-size: 0.95rem;
+}
