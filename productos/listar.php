@@ -18,7 +18,7 @@ $resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-// Consulta base (Con stock_alerta incluido)
+// Consulta base
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         INNER JOIN categoria c ON p.id_categoria = c.id_categoria
@@ -138,14 +138,14 @@ $resultado = $conn->query($sql);
                         <th>Nombre del Artículo</th>
                         <th>Categoría</th>
                         <th style="text-align: right;">Stock Actual</th>
-                        <th style="text-align: center; width: 120px;">Acciones</th> </tr>
+                        <th style="text-align: center; width: 120px;">Acciones</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                         
                         <tr>
-                            
                             <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
                             <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
                             <td data-label="Categoría">
@@ -172,7 +172,11 @@ $resultado = $conn->query($sql);
                             </td>
 
                             <td data-label="Acciones" style="text-align: center;">
-                                <button type="button" class="btn-submit" style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none;" onclick="openModal(<?php echo $fila['id_producto']; ?>, '<?php echo addslashes($fila['nombre_articulo']); ?>', <?php echo $fila['cantidad_stock']; ?>)">
+                                <button type="button" class="btn-submit btn-abrir-modal" 
+                                        style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none;"
+                                        data-id="<?php echo $fila['id_producto']; ?>"
+                                        data-nombre="<?php echo htmlspecialchars($fila['nombre_articulo'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-stock="<?php echo $fila['cantidad_stock']; ?>">
                                     <i class="fa-solid fa-pen-to-square"></i> Gestionar
                                 </button>
                             </td>
@@ -227,24 +231,42 @@ $resultado = $conn->query($sql);
         document.getElementById('open-menu').addEventListener('click', () => sidebar.classList.add('active'));
         document.getElementById('close-menu').addEventListener('click', () => sidebar.classList.remove('active'));
 
+        // ===============================================
+        // NUEVA LÓGICA DE JAVASCRIPT A PRUEBA DE FALLOS
+        // ===============================================
         const modal = document.getElementById('productModal');
-        
-        function openModal(id, nombre, stock) {
-            document.getElementById('modal-title').innerText = nombre;
-            document.getElementById('modal-stock').innerText = stock;
-            document.getElementById('modal-initial').innerText = nombre.charAt(0).toUpperCase();
-            document.getElementById('modal-id').value = id;
-            
-            const editLink = document.getElementById('modal-edit-link');
-            const deleteLink = document.getElementById('modal-delete-link');
-            if(editLink && deleteLink) {
-                editLink.href = 'editar.php?id=' + id;
-                deleteLink.href = 'eliminar.php?id=' + id;
-            }
-            modal.classList.add('active');
-        }
+        const botonesGestionar = document.querySelectorAll('.btn-abrir-modal');
+
+        // A cada botón de la tabla le decimos qué hacer cuando le dan clic
+        botonesGestionar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                // Capturamos los datos ocultos dentro del botón
+                const id = this.getAttribute('data-id');
+                const nombre = this.getAttribute('data-nombre');
+                const stock = this.getAttribute('data-stock');
+
+                // Rellenamos el modal
+                document.getElementById('modal-title').innerText = nombre;
+                document.getElementById('modal-stock').innerText = stock;
+                document.getElementById('modal-initial').innerText = nombre.charAt(0).toUpperCase();
+                document.getElementById('modal-id').value = id;
+                
+                // Actualizamos los enlaces de Editar y Eliminar
+                const editLink = document.getElementById('modal-edit-link');
+                const deleteLink = document.getElementById('modal-delete-link');
+                if(editLink && deleteLink) {
+                    editLink.href = 'editar.php?id=' + id;
+                    deleteLink.href = 'eliminar.php?id=' + id;
+                }
+
+                // Hacemos visible el formulario flotante
+                modal.classList.add('active');
+            });
+        });
 
         function closeModal() { modal.classList.remove('active'); }
+        
+        // Cierra el modal al hacer clic en lo oscuro de afuera
         window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
     </script>
 </body>
