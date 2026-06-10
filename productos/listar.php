@@ -19,7 +19,8 @@ $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
 // Consulta base (1=1 nos permite concatenar condiciones 'AND' fácilmente)
-$sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, c.nombre_categoria 
+// Consulta base (¡AÑADIMOS p.stock_alerta!)
+$sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         INNER JOIN categoria c ON p.id_categoria = c.id_categoria
         WHERE 1=1";
@@ -151,8 +152,26 @@ $resultado = $conn->query($sql);
                                     <?php echo $fila['nombre_categoria']; ?>
                                 </span>
                             </td>
-                            <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;"><?php echo $fila['cantidad_stock']; ?></td>
-                        </tr>
+                                <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
+                                <?php 
+                                    $stock_actual = $fila['cantidad_stock'];
+                                    $alerta = $fila['stock_alerta'];
+                                    
+                                    // Si no hay stock
+                                    if ($stock_actual == 0) {
+                                        echo '<span style="background-color: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> Agotado (0)</span>';
+                                    } 
+                                    // Si está en nivel de alerta (ej: quedan 3 y la alerta es 5)
+                                    else if ($stock_actual <= $alerta) {
+                                        echo '<span style="background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="fa-solid fa-bell"></i> Quedan ' . $stock_actual . '</span>';
+                                    } 
+                                    // Si el stock está saludable
+                                    else {
+                                        echo '<span style="color: #10b981;">' . $stock_actual . '</span>';
+                                    }
+                                ?>
+                            </td>                       
+                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
