@@ -61,10 +61,6 @@
             <p style="color: var(--text-muted); margin-top:0;"><i class="fa-solid fa-code"></i> Ingeniería de Computación</p>
             <p>"La tecnología como herramienta para el orden."</p>
         </div>
-
-        <div style="flex: 1; display: flex; gap: 20px; justify-content: flex-end; flex-wrap: wrap;">
-             <img src="img/miFoto.png" alt="Mi foto personal" style="max-width: 100%; width: 250px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: perspective(1000px) rotateY(-10deg); transition: transform 0.5s ease;">
-        </div>
     </section>
 
     <footer>
