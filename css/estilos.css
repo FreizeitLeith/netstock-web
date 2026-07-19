@@ -237,3 +237,100 @@ footer {
         padding: 50px 20px;
     }
 }
+/* =========================================================
+   ESTILOS NUEVOS DE LA LANDING PAGE (SaaS)
+   ========================================================= */
+
+/* Listas del Hero y Botones */
+.hero-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 30px;
+    margin-bottom: 20px;
+}
+.hero-list p {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+/* Grillas adicionales para el Index */
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tarjetas de pasos (Cómo funciona) */
+.step-card {
+    background: transparent;
+    text-align: center;
+    padding: 20px;
+}
+.step-number {
+    background-color: var(--primary-color);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+}
+
+/* Listas de Roles y Comparativas */
+.role-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.role-list li {
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.role-list li.disabled {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+.role-card {
+    padding: 40px;
+}
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+/* Ajustes Móviles */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center !important;
+        padding-top: 40px;
+    }
+    .hero > div { text-align: center !important; }
+    .hero-list { justify-content: center; }
+    .hero-buttons { justify-content: center; flex-wrap: wrap; }
+}
