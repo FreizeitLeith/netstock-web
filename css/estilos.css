@@ -238,93 +238,169 @@ footer {
     }
 }
 /* =========================================================
-   ESTILOS NUEVOS DE LA LANDING PAGE (SaaS)
+   ESTILOS OPTIMIZADOS DE LA LANDING PAGE (DISEÑO PREMIUM)
    ========================================================= */
 
-/* Listas del Hero y Botones */
+/* Forzar que todas las tarjetas en una grilla tengan la misma altura */
+.grid-3, .grid-4, .grid-2 {
+    display: grid;
+    gap: 30px;
+    margin-top: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: stretch; /* Alinea las tarjetas por igual */
+}
+
+.grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    max-width: 950px;
+}
+
+/* Tarjeta Base Mejorada */
+.card {
+    background-color: var(--surface-color);
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Obliga a la tarjeta a llenar todo el alto del grid */
+    box-sizing: border-box;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+/* Optimización de la sección "¿Cómo funciona?" (Pasos) */
+.steps-container {
+    gap: 20px;
+}
+
+.step-card {
+    background-color: var(--bg-color); /* Contraste inverso con el fondo de la sección */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.step-card:hover {
+    border-color: var(--primary-color);
+}
+
+.step-number {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: #ffffff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.step-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* Optimización de las tarjetas de Roles y Sí/No */
+.role-card {
+    padding: 40px;
+}
+
+.role-card h3 {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.role-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Espaciado uniforme entre elementos */
+}
+
+.role-list li {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+}
+
+/* Iconos alineados perfectamente */
+.role-list li i {
+    font-size: 1.1rem;
+    width: 20px; /* Ancho fijo para que el texto empiece en la misma columna */
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.role-list li.disabled {
+    color: var(--text-muted);
+    opacity: 0.65;
+}
+
+/* Elementos del Hero */
 .hero-list {
     display: flex;
     flex-wrap: wrap;
     gap: 15px 30px;
-    margin-bottom: 20px;
+    margin: 25px 0;
 }
+
 .hero-list p {
     margin: 0;
     font-size: 0.95rem;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
 .hero-buttons {
     display: flex;
     gap: 15px;
 }
 
-/* Grillas adicionales para el Index */
-.grid-4 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
-    margin-top: 40px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.grid-2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Tarjetas de pasos (Cómo funciona) */
-.step-card {
-    background: transparent;
-    text-align: center;
-    padding: 20px;
-}
-.step-number {
-    background-color: var(--primary-color);
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0 auto 20px auto;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-}
-
-/* Listas de Roles y Comparativas */
-.role-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.role-list li {
-    margin-bottom: 15px;
-    font-size: 1.05rem;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-.role-list li.disabled {
-    color: var(--text-muted);
-    text-decoration: line-through;
-    opacity: 0.7;
-}
-.role-card {
-    padding: 40px;
-}
+/* Utilidades de alineación */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 
-/* Ajustes Móviles */
+/* Ajustes Responsivos */
 @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+    }
     .hero {
         flex-direction: column;
         text-align: center !important;
