@@ -1,6 +1,9 @@
 /* css/acceso.css */
 
 /* Contenedor principal en pantalla dividida o centrada */
+/* css/acceso.css */
+
+/* Contenedor principal adaptable */
 .auth-container {
     display: flex;
     min-height: 100vh;
@@ -9,18 +12,25 @@
     background-color: var(--bg-color);
     padding: 20px;
     gap: 40px;
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
-/* Tarjeta del Formulario */
+/* SOLUCIÓN AL LOGIN: Si es panel único, reducimos el contenedor para centrarlo simétricamente */
+.auth-container.single-panel {
+    max-width: 500px;
+}
+
+/* Tarjeta del Formulario unificada */
 .auth-card {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     padding: 40px;
     border-radius: 12px;
+    width: 100%;
     flex: 1;
-    max-width: 500px;
     box-shadow: var(--shadow-md);
     box-sizing: border-box;
 }
