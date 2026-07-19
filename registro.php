@@ -1,109 +1,143 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-require_once 'general/conexion.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'];
-    $correo = $_POST['correo'];
-    $rol = $_POST['rol'];
-    $password = $_POST['password'];
-    $codigo_ingresado = isset($_POST['codigo_negocio']) ? trim($_POST['codigo_negocio']) : '';
-
-    $codigo_final = "";
-
-    // Lógica de Vinculación SaaS
-    if ($rol == 'Jefe' || $rol == 'Administrador') {
-        // Genera un código aleatorio único de 6 caracteres
-        $codigo_final = 'NS-' . strtoupper(substr(md5(uniqid()), 0, 6));
-    } else {
-        // Es Trabajador, verificamos que el código de su jefe exista
-        $sql_verificar = "SELECT id_usuario FROM usuario WHERE codigo_negocio = '$codigo_ingresado' AND (rol = 'Jefe' OR rol = 'Administrador')";
-        $resultado = $conn->query($sql_verificar);
-        
-        if ($resultado && $resultado->num_rows > 0) {
-            $codigo_final = $codigo_ingresado; // Vinculación exitosa
-        } else {
-            echo "<script>alert('Error: El código de vinculación no es válido o no pertenece a ningún negocio activo.'); window.history.back();</script>";
-            exit();
-        }
-    }
-
-    $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena, codigo_negocio) VALUES ('$nombre', '$correo', '$rol', '$password', '$codigo_final')";
-
-    if ($conn->query($sql) === TRUE) {
-        if($rol == 'Jefe' || $rol == 'Administrador'){
-            echo "<script>alert('¡Registrado! Tu Código de Vinculación para tus trabajadores es: $codigo_final'); window.location.href = 'login.php';</script>";
-        } else {
-            echo "<script>alert('¡Cuenta de Trabajador enlazada con éxito!'); window.location.href = 'login.php';</script>";
-        }
-    } else {
-        echo "<script>alert('Hubo un error al registrar: " . $conn->error . "'); window.history.back();</script>";
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro | NetStock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetStock | Crear Cuenta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/acceso.css">
 </head>
-<body style="justify-content: center; display: flex; align-items: center; min-height: 100vh;">
+<body>
 
-    <div class="card-form">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="color: var(--primary-color); margin-bottom: 5px;">Alta de Personal</h2>
-            <p style="color: var(--text-muted); margin-top: 0;">Registra un nuevo usuario en el sistema</p>
-        </div>
-
-        <form action="registro.php" method="POST">
-            <label>Nombre Completo</label>
-            <input type="text" name="nombre" required placeholder="Ej. Carlos Pérez">
-
-            <label>Correo Electrónico</label>
-            <input type="email" name="correo" required placeholder="correo@ejemplo.com">
-
-            <label>Rol en el Sistema</label>
-            <select name="rol" id="rol" required>
-                <option value="Trabajador">Trabajador (Solo Movimientos)</option>
-                <option value="Jefe">Jefe de Sucursal</option>
-            </select>
-
-            <div id="div_codigo">
-                <label style="color: #f59e0b;">Código de Vinculación (Obligatorio)</label>
-                <input type="text" id="codigo_negocio" name="codigo_negocio" placeholder="Ej. NS-A1B2C3" style="border-color: #f59e0b;">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="index.php" class="auth-logo">NetStock</a>
+                <p class="auth-subtitle">Crea tu cuenta para administrar el inventario de tu negocio de forma simple.</p>
             </div>
 
-            <label>Contraseña Segura</label>
-            <input type="password" name="password" required placeholder="Crea una contraseña">
+            <form action="procesar_registro.php" method="POST" class="auth-form">
+                
+                <div class="input-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                    </div>
+                </div>
 
-            <button type="submit" class="btn-submit">Registrar Usuario</button>
-        </form>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="login.php" class="text-muted">¿Ya perteneces al equipo? Inicia sesión</a>
+                <div class="input-group">
+                    <label for="email">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" placeholder="********" required>
+                        <i class="fa-solid fa-eye toggle-password" id="btnTogglePassword"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="rol">¿Cuál es tu rol en el negocio?</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user-gear input-icon"></i>
+                        <select id="rol" name="rol" required>
+                            <option value="jefe" selected>👔 Jefe / Dueño de negocio</option>
+                            <option value="trabajador">👷 Trabajador / Empleado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group" id="grupo-codigo-vinculacion" style="display: none;">
+                    <label for="codigo_vinculacion">Código de Vinculación (Obligatorio)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-key input-icon"></i>
+                        <input type="text" id="codigo_vinculacion" name="codigo_vinculacion" placeholder="Ej. NET-12345">
+                    </div>
+                    <span class="code-help">Este código debe proporcionártelo el jefe de tu negocio para vincularte a su inventario.</span>
+                    <span class="code-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Este código lo genera automáticamente el jefe desde su panel.
+                    </span>
+                </div>
+
+                <button type="submit" class="btn-submit w-100">Comenzar ahora</button>
+
+                <p class="auth-footer-text">
+                    ¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a>
+                </p>
+            </form>
         </div>
+
+        <div class="auth-features-panel" id="features-box">
+            </div>
     </div>
 
     <script>
-        const selectRol = document.getElementById('rol');
-        const divCodigo = document.getElementById('div_codigo');
-        const inputCodigo = document.getElementById('codigo_negocio');
+        // 1. Mostrar/Ocultar Contraseña
+        const btnTogglePassword = document.getElementById('btnTogglePassword');
+        const inputPassword = document.getElementById('password');
 
-        function toggleCodigo() {
-            if(selectRol.value === 'Trabajador') {
-                divCodigo.style.display = 'block';
+        btnTogglePassword.addEventListener('click', function () {
+            const type = inputPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputPassword.setAttribute('type', type);
+            
+            // Intercambiar icono de ojo
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 2. Cambio de Explicaciones y Campos Dinámicos según el Rol
+        const selectorRol = document.getElementById('rol');
+        const grupoCodigo = document.getElementById('grupo-codigo-vinculacion');
+        const inputCodigo = document.getElementById('codigo_vinculacion');
+        const cajaVentajas = document.getElementById('features-box');
+
+        // Plantillas de texto para las ventajas
+        const ventajasJefe = `
+            <h3>Como jefe podrás:</h3>
+            <ul class="features-list-box">
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Crear productos:</strong> Configura tu catálogo inicial.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Eliminar productos:</strong> Mantén limpio tu espacio de trabajo.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Administrar trabajadores:</strong> Controla quién entra a tu sistema.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Consultar historial:</strong> Auditoría completa de movimientos.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Configurar el sistema:</strong> Ajustes generales a tu medida.</li>
+            </ul>
+        `;
+
+        const ventajasTrabajador = `
+            <h3>Como trabajador podrás:</h3>
+            <ul class="features-list-box">
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Consultar inventario:</strong> Revisa el stock disponible en tiempo real.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Actualizar existencias:</strong> Suma entradas y restas salidas al instante.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Registrar movimientos:</strong> Deja constancia clara de lo que despachas.</li>
+                <li class="forbidden"><i class="fa-solid fa-circle-xmark text-red"></i> <strong>No podrás</strong> eliminar productos del catálogo.</li>
+                <li class="forbidden"><i class="fa-solid fa-circle-xmark text-red"></i> <strong>No podrás</strong> crear ni invitar otros usuarios.</li>
+            </ul>
+        `;
+
+        function actualizarFormulario() {
+            if (selectorRol.value === 'trabajador') {
+                grupoCodigo.style.display = 'block';
                 inputCodigo.required = true;
+                cajaVentajas.innerHTML = ventajasTrabajador;
             } else {
-                divCodigo.style.display = 'none';
+                grupoCodigo.style.display = 'none';
                 inputCodigo.required = false;
-                inputCodigo.value = '';
+                inputCodigo.value = ''; // Limpia si escribió algo
+                cajaVentajas.innerHTML = ventajasJefe;
             }
         }
-        selectRol.addEventListener('change', toggleCodigo);
-        toggleCodigo(); // Ejecutar al cargar
+
+        // Escuchar el cambio e inicializar al cargar la página
+        selectorRol.addEventListener('change', actualizarFormulario);
+        actualizarFormulario();
     </script>
 </body>
 </html>
