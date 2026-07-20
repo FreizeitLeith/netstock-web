@@ -1,3 +1,27 @@
+<?php
+session_start();
+
+// PROCESAR EN LA MISMA PÁGINA
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST['nombre'];
+    // Sincronizado con tus variables: correo y codigo_negocio
+    $correo = $_POST['correo'];
+    $password = $_POST['password'];
+    $rol = $_POST['rol'];
+    $codigo_ingresado = isset($_POST['codigo_negocio']) ? trim($_POST['codigo_negocio']) : '';
+
+    if (!empty($correo)) {
+        // Guardamos exactamente las mismas variables que tu panel y seguridad revisan
+        $_SESSION['usuario_id'] = 2;
+        $_SESSION['nombre'] = $nombre;
+        $_SESSION['rol'] = $rol;
+        $_SESSION['codigo_negocio'] = ($rol == 'Jefe') ? 'NS-' . strtoupper(substr(md5(uniqid()), 0, 6)) : $codigo_ingresado;
+
+        header("Location: panel.php");
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,7 +41,7 @@
                 <p class="auth-subtitle">Crea tu cuenta para administrar el inventario de tu negocio de forma simple.</p>
             </div>
 
-            <form action="procesar_registro.php" method="POST" class="auth-form">
+            <form action="" method="POST" class="auth-form">
                 
                 <div class="input-group">
                     <label for="nombre">Nombre Completo</label>
@@ -28,10 +52,10 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="email">Correo electrónico</label>
+                    <label for="correo">Correo electrónico</label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-envelope input-icon"></i>
-                        <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" required>
                     </div>
                 </div>
 
@@ -49,21 +73,21 @@
                     <div class="input-wrapper">
                         <i class="fa-solid fa-user-gear input-icon"></i>
                         <select id="rol" name="rol" required>
-                            <option value="jefe" selected>👔 Jefe / Dueño de negocio</option>
-                            <option value="trabajador">👷 Trabajador / Empleado</option>
+                            <option value="Jefe" selected>👔 Jefe / Dueño de negocio</option>
+                            <option value="Trabajador">👷 Trabajador / Empleado</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="input-group" id="grupo-codigo-vinculacion" style="display: none;">
-                    <label for="codigo_vinculacion">Código de Vinculación (Obligatorio)</label>
+                    <label for="codigo_negocio">Código de Vinculación (Obligatorio)</label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-key input-icon"></i>
-                        <input type="text" id="codigo_vinculacion" name="codigo_vinculacion" placeholder="Ej. NET-12345">
+                        <input type="text" id="codigo_negocio" name="codigo_negocio" placeholder="Ej. NS-A1B2C3">
                     </div>
                     <span class="code-help">Este código debe proporcionártelo el jefe de tu negocio para vincularte a su inventario.</span>
                     <span class="code-warning">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Este código lo genera automáticamente el jefe desde su panel.
+                        <i class="fa-solid fa-triangle-exclamation"></i> Este código lo genera automáticamente el jefe.
                     </span>
                 </div>
 
@@ -80,26 +104,21 @@
     </div>
 
     <script>
-        // 1. Mostrar/Ocultar Contraseña
         const btnTogglePassword = document.getElementById('btnTogglePassword');
         const inputPassword = document.getElementById('password');
 
         btnTogglePassword.addEventListener('click', function () {
             const type = inputPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             inputPassword.setAttribute('type', type);
-            
-            // Intercambiar icono de ojo
             this.classList.toggle('fa-eye');
             this.classList.toggle('fa-eye-slash');
         });
 
-        // 2. Cambio de Explicaciones y Campos Dinámicos según el Rol
         const selectorRol = document.getElementById('rol');
         const grupoCodigo = document.getElementById('grupo-codigo-vinculacion');
-        const inputCodigo = document.getElementById('codigo_vinculacion');
+        const inputCodigo = document.getElementById('codigo_negocio');
         const cajaVentajas = document.getElementById('features-box');
 
-        // Plantillas de texto para las ventajas
         const ventajasJefe = `
             <h3>Como jefe podrás:</h3>
             <ul class="features-list-box">
@@ -107,35 +126,29 @@
                 <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Eliminar productos:</strong> Mantén limpio tu espacio de trabajo.</li>
                 <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Administrar trabajadores:</strong> Controla quién entra a tu sistema.</li>
                 <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Consultar historial:</strong> Auditoría completa de movimientos.</li>
-                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Configurar el sistema:</strong> Ajustes generales a tu medida.</li>
-            </ul>
-        `;
+            </ul>`;
 
         const ventajasTrabajador = `
             <h3>Como trabajador podrás:</h3>
             <ul class="features-list-box">
                 <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Consultar inventario:</strong> Revisa el stock disponible en tiempo real.</li>
-                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Actualizar existencias:</strong> Suma entradas y restas salidas al instante.</li>
-                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Registrar movimientos:</strong> Deja constancia clara de lo que despachas.</li>
+                <li><i class="fa-solid fa-circle-check text-green"></i> <strong>Actualizar existencias:</strong> Suma entradas y restas salidas.</li>
                 <li class="forbidden"><i class="fa-solid fa-circle-xmark text-red"></i> <strong>No podrás</strong> eliminar productos del catálogo.</li>
-                <li class="forbidden"><i class="fa-solid fa-circle-xmark text-red"></i> <strong>No podrás</strong> crear ni invitar otros usuarios.</li>
-            </ul>
-        `;
+            </ul>`;
 
         function actualizarFormulario() {
-            if (selectorRol.value === 'trabajador') {
+            if (selectorRol.value === 'Trabajador') { // Ojo con la T mayúscula que pusiste en las opciones
                 grupoCodigo.style.display = 'block';
                 inputCodigo.required = true;
                 cajaVentajas.innerHTML = ventajasTrabajador;
             } else {
                 grupoCodigo.style.display = 'none';
                 inputCodigo.required = false;
-                inputCodigo.value = ''; // Limpia si escribió algo
+                inputCodigo.value = '';
                 cajaVentajas.innerHTML = ventajasJefe;
             }
         }
 
-        // Escuchar el cambio e inicializar al cargar la página
         selectorRol.addEventListener('change', actualizarFormulario);
         actualizarFormulario();
     </script>
