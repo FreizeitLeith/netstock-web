@@ -1,3 +1,11 @@
+<?php
+session_start();
+// Creamos una variable para saber si el usuario ya está dentro
+$logeado = isset($_SESSION['rol']);
+?>
+<!DOCTYPE html>
+<html lang="es">
+...
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,13 +20,18 @@
 
     <header>
         <div class="logo">NetStock</div>
-        <nav class="nav-links">
+      <nav class="nav-links">
             <a href="#inicio">Inicio</a>
             <a href="#funciones">Funciones</a>
             <a href="#roles">Roles</a>
             <a href="#faq">Preguntas frecuentes</a>
-            <a href="login.php" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
-            <a href="registro.php" class="btn-registro"><i class="fa-solid fa-user-plus"></i> Crear cuenta</a>
+            
+            <?php if($logeado): ?>
+                <a href="general/panel.php" class="btn-login"><i class="fa-solid fa-chart-line"></i> Ir al Panel</a>
+            <?php else: ?>
+                <a href="login.php" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="registro.php" class="btn-registro"><i class="fa-solid fa-user-plus"></i> Crear cuenta</a>
+            <?php endif; ?>
         </nav>
     </header>
 
