@@ -84,20 +84,50 @@ if (!isset($_SESSION['rol'])) {
 
         <div class="main-content">
             
-            <div style="background-color: var(--surface-color); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 30px;">
-                <h2 style="margin-top: 0; color: var(--text-main); font-size: 2.2rem; margin-bottom: 10px; letter-spacing: -0.5px;">
-                    Bienvenido al Centro de Operaciones
-                </h2>
-                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
-            <div style="background-color: rgba(139, 92, 246, 0.1); border: 1px dashed var(--primary-color); padding: 15px; border-radius: 8px; margin-bottom: 30px; display: inline-block;">
-                <span style="color: var(--text-muted); font-size: 0.9rem;">Código de Vinculación para tus Trabajadores:</span><br>
-                <strong style="color: var(--primary-color); font-size: 1.5rem; letter-spacing: 2px;"><?php echo $_SESSION['codigo_negocio']; ?></strong>
-            </div>
+<div class="welcome-container" style="display: flex; gap: 30px; background-color: var(--surface-color); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 30px; flex-wrap: wrap;">
+    
+    <div class="welcome-message" style="flex: 1.4; min-width: 300px;">
+        <h2 style="margin-top: 0; color: var(--text-main); font-size: 2.2rem; margin-bottom: 15px; letter-spacing: -0.5px;">
+            Bienvenido al Centro de Operaciones
+        </h2>
+        
+        <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+        <div style="background-color: rgba(139, 92, 246, 0.1); border: 1px dashed var(--primary-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: inline-block;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;"><i class="fa-solid fa-key" style="margin-right: 5px;"></i> Código de Vinculación para tus Trabajadores:</span><br>
+            <strong style="color: var(--primary-color); font-size: 1.5rem; letter-spacing: 2px;"><?php echo $_SESSION['codigo_negocio']; ?></strong>
+        </div>
+        <?php endif; ?>
+        
+        <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 0; line-height: 1.5;">
+            Has iniciado sesión correctamente. Selecciona cualquiera de los módulos habilitados para tu nivel de acceso en el menú lateral izquierdo para comenzar a trabajar de forma segura y eficiente.
+        </p>
+    </div>
+
+    <div class="menu-guide" style="flex: 1; min-width: 280px; background-color: rgba(0, 0, 0, 0.15); padding: 25px; border-radius: 10px; border: 1px solid var(--border-color);">
+        <h4 style="margin-top: 0; color: var(--primary-color); font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+            <i class="fa-solid fa-circle-info"></i> Guía rápida de opciones
+        </h4>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; color: var(--text-main);">
+            <li style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fa-solid fa-box" style="color: var(--primary-color); margin-top: 3px; width: 14px; text-align: center;"></i>
+                <span><strong>Inventario:</strong> Consulta el catálogo completo, gestiona alertas de stock mínimo y registra entradas/salidas de mercancía.</span>
+            </li>
+            
+            <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Jefe'): ?>
+            <li style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fa-solid fa-clock-rotate-left" style="color: var(--primary-color); margin-top: 3px; width: 14px; text-align: center;"></i>
+                <span><strong>Historial:</strong> Registro inmutable (Auditoría). Permite revisar quién cargó o retiró cada producto y en qué fecha exacta.</span>
+            </li>
             <?php endif; ?>
-                <p style="color: var(--text-muted); max-width: 650px; font-size: 1.05rem; margin-bottom: 0;">
-                    Has iniciado sesión correctamente. Selecciona cualquiera de los módulos habilitados para tu nivel de acceso en el menú lateral izquierdo para comenzar a trabajar de forma segura y eficiente.
-                </p>
-            </div>
+
+            <li style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fa-solid fa-gear" style="color: var(--primary-color); margin-top: 3px; width: 14px; text-align: center;"></i>
+                <span><strong>Soporte:</strong> ¿Encontraste algún problema? Envía un ticket directo al desarrollador para reportar fallas del sistema.</span>
+            </li>
+        </ul>
+    </div>
+
+</div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                 
