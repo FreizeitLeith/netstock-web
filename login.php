@@ -1,30 +1,3 @@
-<?php
-session_start();
-// Si ya tiene una sesión activa, lo mandamos directo al panel
-if (isset($_SESSION['rol'])) {
-    header("Location: panel.php");
-    exit();
-}
-
-// PROCESAR EN LA MISMA PÁGINA
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sincronizado con seguridad.php: usamos 'correo'
-    $correo = $_POST['correo'];
-    $password = $_POST['password'];
-
-    if (!empty($correo) && !empty($password)) {
-        // [Aquí incluirías tu conexión si quieres validar contra la BD real]
-        // Por ahora, iniciamos sesión directo para que pases al panel en la prueba:
-        $_SESSION['usuario_id'] = 1;
-        $_SESSION['nombre'] = "Jefe de Prueba";
-        $_SESSION['rol'] = 'Jefe'; 
-        $_SESSION['codigo_negocio'] = "NS-REALE"; 
-
-        header("Location: panel.php");
-        exit();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -44,13 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p class="auth-subtitle">Accede para administrar el inventario de tu negocio.</p>
             </div>
 
-            <form action="" method="POST" class="auth-form">
+            <form action="procesar_login.php" method="POST" class="auth-form">
                 
                 <div class="input-group">
-                    <label for="correo">Correo electrónico</label>
+                    <label for="email">Correo electrónico</label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-envelope input-icon"></i>
-                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" required>
+                        <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
                     </div>
                 </div>
 
@@ -79,6 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         btnTogglePassword.addEventListener('click', function () {
             const type = inputPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             inputPassword.setAttribute('type', type);
+            
+            // Intercambio visual del ojo
             this.classList.toggle('fa-eye');
             this.classList.toggle('fa-eye-slash');
         });
