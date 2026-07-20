@@ -1,24 +1,56 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// PROCESAR EN LA MISMA PÁGINA
+// 1. CONEXIÓN A LA BASE DE DATOS (Recuperado de tu primer código)
+require_once 'general/conexion.php';
+
+// PROCESAR EN LA MISMA PÁGINA PARA EVITAR ERROR 404
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST['nombre'];
-    // Sincronizado con tus variables: correo y codigo_negocio
     $correo = $_POST['correo'];
-    $password = $_POST['password'];
     $rol = $_POST['rol'];
+    $password = $_POST['password'];
     $codigo_ingresado = isset($_POST['codigo_negocio']) ? trim($_POST['codigo_negocio']) : '';
 
-    if (!empty($correo)) {
-        // Guardamos exactamente las mismas variables que tu panel y seguridad revisan
-        $_SESSION['usuario_id'] = 2;
+    $codigo_final = "";
+
+    // 2. LÓGICA DE VINCULACIÓN SAAS (Recuperado de tu primer código)
+    if ($rol == 'Jefe' || $rol == 'Administrador') {
+        // Genera un código aleatorio único de 6 caracteres
+        $codigo_final = 'NS-' . strtoupper(substr(md5(uniqid()), 0, 6));
+    } else {
+        // Es Trabajador, verificamos que el código de su jefe exista en la BD
+        $sql_verificar = "SELECT id_usuario FROM usuario WHERE codigo_negocio = '$codigo_ingresado' AND (rol = 'Jefe' OR rol = 'Administrador')";
+        $resultado = $conn->query($sql_verificar);
+        
+        if ($resultado && $resultado->num_rows > 0) {
+            $codigo_final = $codigo_ingresado; // Vinculación exitosa
+        } else {
+            echo "<script>alert('Error: El código de vinculación no es válido o no pertenece a ningún negocio activo.'); window.history.back();</script>";
+            exit();
+        }
+    }
+
+    // 3. INSERTAR EN LA BASE DE DATOS REAL
+    $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena, codigo_negocio) VALUES ('$nombre', '$correo', '$rol', '$password', '$codigo_final')";
+
+    if ($conn->query($sql) === TRUE) {
+        // 4. GUARDAR SESIÓN Y ENTRAR AL PANEL AUTOMÁTICAMENTE
+        $_SESSION['usuario_id'] = $conn->insert_id; // Toma el ID recién creado
         $_SESSION['nombre'] = $nombre;
         $_SESSION['rol'] = $rol;
-        $_SESSION['codigo_negocio'] = ($rol == 'Jefe') ? 'NS-' . strtoupper(substr(md5(uniqid()), 0, 6)) : $codigo_ingresado;
+        $_SESSION['codigo_negocio'] = $codigo_final;
 
-        header("Location: panel.php");
+        if($rol == 'Jefe' || $rol == 'Administrador'){
+            echo "<script>alert('¡Registrado! Tu Código de Vinculación para tus trabajadores es: $codigo_final'); window.location.href = 'panel.php';</script>";
+        } else {
+            echo "<script>alert('¡Cuenta de Trabajador enlazada con éxito!'); window.location.href = 'panel.php';</script>";
+        }
         exit();
+    } else {
+        echo "<script>alert('Hubo un error al registrar: " . $conn->error . "'); window.history.back();</script>";
     }
 }
 ?>
@@ -137,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </ul>`;
 
         function actualizarFormulario() {
-            if (selectorRol.value === 'Trabajador') { // Ojo con la T mayúscula que pusiste en las opciones
+            if (selectorRol.value === 'Trabajador') { 
                 grupoCodigo.style.display = 'block';
                 inputCodigo.required = true;
                 cajaVentajas.innerHTML = ventajasTrabajador;
