@@ -1,55 +1,45 @@
 <?php
 session_start();
-
 require_once 'conexion.php';
 
+// Verificar que la petición venga del formulario
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     header("Location: panel.php");
     exit();
 }
 
+// Capturar datos
 $correo = trim($_POST['correo']);
 $password = trim($_POST['password']);
 
+// Buscar el usuario únicamente por el correo
 $sql = "SELECT * FROM usuario WHERE correo = '$correo'";
-
 $resultado = $conn->query($sql);
 
-if ($resultado && $resultado->num_rows > 0) {
+// Verificar si el usuario existe
+if ($resultado && $resultado->num_rows == 1) {
 
     $usuario = $resultado->fetch_assoc();
-echo "Contraseña escrita: [" . $password . "]<br>";
-echo "Contraseña BD: [" . $usuario['contrasena'] . "]";
-exit();
-    echo "<pre>";
-    print_r($usuario);
-    echo "</pre>";
-    exit();
 
-} else {
+    // Comparar la contraseña
+    if ($password == $usuario['contrasena']) {
 
-    echo "No existe ese correo.";
-    exit();
+        // Crear variables de sesión
+        $_SESSION['usuario_id'] = $usuario['id_usuario'];
+        $_SESSION['nombre'] = $usuario['nombre'];
+        $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['codigo_negocio'] = $usuario['codigo_negocio'];
 
-}
+        // Redirigir al panel principal
+        header("Location: panel.php");
+        exit();
 
-$sql = "SELECT * FROM usuario
-        WHERE correo='$correo'
-        AND contrasena='$password'";
+    } else {
 
-$resultado = mysqli_query($conn, $sql);
+        header("Location: ../login.php?error=1");
+        exit();
 
-if ($resultado && mysqli_num_rows($resultado) == 1) {
-
-    $usuario = mysqli_fetch_assoc($resultado);
-
-    $_SESSION['usuario_id'] = $usuario['id_usuario'];
-    $_SESSION['nombre'] = $usuario['nombre'];
-    $_SESSION['rol'] = $usuario['rol'];
-    $_SESSION['codigo_negocio'] = $usuario['codigo_negocio'];
-
-    header("Location: panel.php");
-    exit();
+    }
 
 } else {
 
@@ -57,3 +47,4 @@ if ($resultado && mysqli_num_rows($resultado) == 1) {
     exit();
 
 }
+?>
