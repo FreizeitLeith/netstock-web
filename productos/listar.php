@@ -8,18 +8,13 @@ if (!isset($_SESSION['rol'])) {
 }
 
 $rol = $_SESSION['rol'];
-
-$sql_categorias_filtro = "SELECT * FROM categoria";
-$resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
-
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtro_categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-// Modifica el select de las categorías del filtro:
-// Modifica el select de las categorías del filtro:
+// Consultas filtradas por código de negocio
 $sql_categorias_filtro = "SELECT * FROM categoria WHERE codigo_negocio = '{$_SESSION['codigo_negocio']}'";
+$resultado_categorias_filtro = $conn->query($sql_categorias_filtro);
 
-// Modifica la consulta base del inventario (Cambia el WHERE 1=1):
 $sql = "SELECT p.id_producto, p.nombre_articulo, p.cantidad_stock, p.stock_alerta, c.nombre_categoria 
         FROM producto p
         LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
@@ -46,19 +41,28 @@ $resultado = $conn->query($sql);
     <link rel="stylesheet" href="../css/estilos.css">
     <link rel="stylesheet" href="../css/panel.css"> 
     <link rel="stylesheet" href="../css/inventario.css"> 
+    <style>
+        /* Estilos del Modal Flotante */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; width: 90%; max-width: 480px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+    </style>
 </head>
 <body>
 
     <div class="mobile-header">
-        <span style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color);">NetStock</span>
+        <a href="../index.php" style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color); text-decoration: none;">NetStock</a>
         <button class="menu-toggle-btn" id="open-menu"><i class="fa-solid fa-bars"></i></button>
     </div>
 
     <div class="dashboard-container">
-        
         <div class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <span><i class="fa-solid fa-layer-group" style="margin-right: 8px;"></i> NetStock</span>
+                <a href="../index.php" style="color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-layer-group"></i> NetStock
+                </a>
                 <button class="menu-toggle-btn" id="close-menu" style="display: none;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
@@ -84,61 +88,19 @@ $resultado = $conn->query($sql);
         </div>
 
         <div class="main-content">
-            
             <div class="page-header">
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <h2 style="margin: 0; font-size: 1.8rem;">Productos</h2>
-<div class="legend-container" style="background-color: rgba(0, 0, 0, 0.15); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
-    <h4 style="margin-top: 0; color: var(--primary-color); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
-        <i class="fa-solid fa-circle-info"></i> Guía de Botones y Acciones
-    </h4>
-    <div style="display: flex; gap: 25px; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-main);">
-        
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="border: 1px solid var(--primary-color); color: var(--primary-color); padding: 4px 10px; border-radius: 4px; font-weight: bold;">
-                <i class="fa-solid fa-pen-to-square"></i> Gestionar
-            </span>
-            <span style="color: var(--text-muted);">Sumar o restar existencias (Entradas/Salidas).</span>
-        </div>
-
-        <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="background-color: var(--primary-color); color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold;">
-                <i class="fa-solid fa-plus"></i> Nuevo
-            </span>
-            <span style="color: var(--text-muted);">Añadir un artículo al catálogo.</span>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="background-color: transparent; border: 1px solid #eab308; color: #eab308; padding: 4px 10px; border-radius: 4px; font-weight: bold;">
-                <i class="fa-solid fa-folder-plus"></i> Categorías
-            </span>
-            <span style="color: var(--text-muted);">Agrupar productos para organizar y filtrar tu stock.</span>
-        </div>
-        
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="color: #f59e0b; font-weight: bold;">
-                <i class="fa-solid fa-pen"></i> Editar
-            </span>
-            <span style="color: var(--text-muted);">Modificar nombre, alertas o categoría.</span>
-        </div>
-        
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="color: #ef4444; font-weight: bold;">
-                <i class="fa-solid fa-trash-can"></i> Eliminar
-            </span>
-            <span style="color: var(--text-muted);">Borrar producto (solo si no tiene historial).</span>
-        </div>
-        <?php endif; ?>
-
-    </div>
-</div>
-                <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;"><i class="fa-solid fa-tags"></i> Categorías</a>
-                        <a href="crear.php" class="btn-submit"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
-                    </div>
-                <?php endif; ?>
+                    <h2 style="margin: 0; font-size: 1.8rem;">Inventario</h2>
+                    <button type="button" id="btnHelp" class="btn-submit" style="background-color: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 8px 15px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: none;">
+                        <i class="fa-solid fa-circle-question"></i> Ayuda
+                    </button>
+                    <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;"><i class="fa-solid fa-tags"></i> Categorías</a>
+                            <a href="crear.php" class="btn-submit"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <form method="GET" action="listar.php" class="filter-search-row">
@@ -154,85 +116,82 @@ $resultado = $conn->query($sql);
                         }
                         ?>
                     </select>
-                    <i class="fa-solid fa-chevron-down modern-select-icon"></i>
                 </div>
-
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div class="modern-search">
                         <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                        <input type="text" name="buscar" placeholder="Buscar artículo o stock..." value="<?php echo htmlspecialchars($busqueda); ?>" autocomplete="off">
+                        <input type="text" name="buscar" placeholder="Buscar artículo..." value="<?php echo htmlspecialchars($busqueda); ?>" autocomplete="off">
                     </div>
-                    
-                    <?php if(!empty($busqueda) || !empty($filtro_categoria)): ?>
-                        <a href="listar.php" class="btn-submit" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px 15px; text-decoration: none; box-shadow: none;" title="Limpiar Filtros">
-                            <i class="fa-solid fa-eraser"></i>
-                        </a>
-                    <?php endif; ?>
-                    
-                    <button type="submit" style="display: none;">Buscar</button>
                 </div>
             </form>
 
             <table style="width: 100%; text-align: left;">
                 <thead>
                     <tr>
-                        <th style="width: 50px;">ID</th>
+                        <th>ID</th>
                         <th>Nombre del Artículo</th>
                         <th>Categoría</th>
                         <th style="text-align: right;">Stock Actual</th>
-                        <th style="text-align: center; width: 120px;">Acciones</th>
+                        <th style="text-align: center;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
-                        
                         <tr>
-                            <td data-label="ID" style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
-                            <td data-label="Artículo" style="font-weight: 500;"><?php echo $fila['nombre_articulo']; ?></td>
-                            <td data-label="Categoría">
-                                <span style="background-color: var(--bg-color); padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; border: 1px solid var(--border-color);">
-                                    <?php echo $fila['nombre_categoria']; ?>
-                                </span>
-                            </td>
-                            
-                            <td data-label="Stock" style="text-align: right; font-weight: 600; font-size: 1.1rem;">
+                            <td style="color: var(--text-muted); font-weight: bold;"><?php echo $fila['id_producto']; ?></td>
+                            <td><?php echo $fila['nombre_articulo']; ?></td>
+                            <td><?php echo $fila['nombre_categoria']; ?></td>
+                            <td style="text-align: right; font-weight: 600;">
                                 <?php 
-                                    $stock_actual = $fila['cantidad_stock'];
-                                    $alerta = isset($fila['stock_alerta']) ? $fila['stock_alerta'] : 5; 
-                                    
-                                    if ($stock_actual == 0) {
-                                        echo '<span style="background-color: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> Agotado (0)</span>';
-                                    } 
-                                    else if ($stock_actual <= $alerta) {
-                                        echo '<span style="background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="fa-solid fa-bell"></i> Quedan ' . $stock_actual . '</span>';
-                                    } 
-                                    else {
-                                        echo '<span style="color: #10b981;">' . $stock_actual . '</span>';
-                                    }
+                                $stock = $fila['cantidad_stock'];
+                                $alerta = $fila['stock_alerta'];
+                                if ($stock == 0) echo '<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Agotado</span>';
+                                else if ($stock <= $alerta) echo '<span style="color: #f59e0b;"><i class="fa-solid fa-bell"></i> ' . $stock . '</span>';
+                                else echo $stock;
                                 ?>
                             </td>
-
-                            <td data-label="Acciones" style="text-align: center;">
-                                <a href="gestionar.php?id=<?php echo $fila['id_producto']; ?>" class="btn-submit" style="padding: 6px 12px; font-size: 0.85rem; background-color: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; text-decoration: none; display: inline-block;">
+                            <td style="text-align: center;">
+                                <a href="gestionar.php?id=<?php echo $fila['id_producto']; ?>" class="btn-submit" style="padding: 6px 12px; background: transparent; color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none;">
                                     <i class="fa-solid fa-pen-to-square"></i> Gestionar
                                 </a>
                             </td>
-
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">No se encontraron productos.</td>
-                        </tr>
+                        <tr><td colspan="5" style="text-align: center; padding: 40px;">No se encontraron productos.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0; color: var(--primary-color);">Guía de Acciones</h3>
+                <button type="button" id="closeHelp" style="background: none; border: none; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div><strong>Gestionar:</strong> Ajustar stock (Entrada/Salida).</div>
+                <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+                    <div><strong>Nuevo:</strong> Añadir producto al catálogo.</div>
+                    <div><strong>Categorías:</strong> Gestionar grupos de productos.</div>
+                    <div><strong>Editar:</strong> Modificar datos del producto.</div>
+                    <div><strong>Eliminar:</strong> Borrar producto.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
     <script>
-        if(localStorage.getItem('tema') === 'claro') { document.documentElement.setAttribute('data-theme', 'light'); }
+        const btnHelp = document.getElementById('btnHelp');
+        const helpModal = document.getElementById('helpModal');
+        const closeHelp = document.getElementById('closeHelp');
+        btnHelp.addEventListener('click', () => helpModal.classList.add('active'));
+        closeHelp.addEventListener('click', () => helpModal.classList.remove('active'));
+        helpModal.addEventListener('click', (e) => { if(e.target === helpModal) helpModal.classList.remove('active'); });
+
         const sidebar = document.getElementById('sidebar');
         document.getElementById('open-menu').addEventListener('click', () => sidebar.classList.add('active'));
         document.getElementById('close-menu').addEventListener('click', () => sidebar.classList.remove('active'));
