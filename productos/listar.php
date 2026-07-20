@@ -89,7 +89,44 @@ $resultado = $conn->query($sql);
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <h2 style="margin: 0; font-size: 1.8rem;">Productos</h2>
                 </div>
-                
+                <div class="legend-container" style="background-color: rgba(0, 0, 0, 0.15); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
+    <h4 style="margin-top: 0; color: var(--primary-color); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+        <i class="fa-solid fa-circle-info"></i> Guía de Botones y Acciones
+    </h4>
+    <div style="display: flex; gap: 25px; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-main);">
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="border: 1px solid var(--primary-color); color: var(--primary-color); padding: 4px 10px; border-radius: 4px; font-weight: bold;">
+                <i class="fa-solid fa-pen-to-square"></i> Gestionar
+            </span>
+            <span style="color: var(--text-muted);">Sumar o restar existencias (Entradas/Salidas).</span>
+        </div>
+
+        <?php if($_SESSION['rol'] == 'Jefe' || $_SESSION['rol'] == 'Administrador'): ?>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="background-color: var(--primary-color); color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold;">
+                <i class="fa-solid fa-plus"></i> Nuevo
+            </span>
+            <span style="color: var(--text-muted);">Añadir un artículo al catálogo.</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="color: #f59e0b; font-weight: bold;">
+                <i class="fa-solid fa-pen"></i> Editar
+            </span>
+            <span style="color: var(--text-muted);">Modificar nombre, alertas o categoría.</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="color: #ef4444; font-weight: bold;">
+                <i class="fa-solid fa-trash-can"></i> Eliminar
+            </span>
+            <span style="color: var(--text-muted);">Borrar producto (solo si no tiene historial).</span>
+        </div>
+        <?php endif; ?>
+
+    </div>
+</div>
                 <?php if ($rol == 'Jefe' || $rol == 'Administrador'): ?>
                     <div style="display: flex; gap: 10px;">
                         <a href="crear_categoria.php" class="btn-submit" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;"><i class="fa-solid fa-tags"></i> Categorías</a>
