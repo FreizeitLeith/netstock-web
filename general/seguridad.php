@@ -11,6 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $correo = trim($_POST['correo']);
 $password = trim($_POST['password']);
 
+echo "Correo recibido: " . $correo . "<br>";
+echo "Contraseña recibida: " . $password . "<br>";
+exit();
+
 $sql = "SELECT * FROM usuario
         WHERE correo='$correo'
         AND contrasena='$password'";
