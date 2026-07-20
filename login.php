@@ -17,7 +17,7 @@
                 <p class="auth-subtitle">Accede para administrar el inventario de tu negocio.</p>
             </div>
 
-            <form action="general/seguridad.php" method="POST" class="auth-form"ñ>
+            <form action="general/seguridad.php" method="POST" class="auth-form">
                 
                 <div class="input-group">
                     <label for="correo">Correo electrónico</label>

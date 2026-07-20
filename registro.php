@@ -36,17 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 3. INSERTAR EN LA BASE DE DATOS REAL
     $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena, codigo_negocio) VALUES ('$nombre', '$correo', '$rol', '$password', '$codigo_final')";
 
-    if ($conn->query($sql) === TRUE) {
-        // 4. GUARDAR SESIÓN Y ENTRAR AL PANEL AUTOMÁTICAMENTE
-        $_SESSION['usuario_id'] = $conn->insert_id; // Toma el ID recién creado
-        $_SESSION['nombre'] = $nombre;
-        $_SESSION['rol'] = $rol;
-        $_SESSION['codigo_negocio'] = $codigo_final;
+   // 3. INSERTAR EN LA BASE DE DATOS REAL
+    $sql = "INSERT INTO usuario (nombre, correo, rol, contrasena, codigo_negocio) VALUES ('$nombre', '$correo', '$rol', '$password', '$codigo_final')";
 
+    if ($conn->query($sql) === TRUE) {
+        // Redirigir al LOGIN para que inicie sesión manualmente
         if($rol == 'Jefe' || $rol == 'Administrador'){
-            echo "<script>alert('¡Registrado! Tu Código de Vinculación para tus trabajadores es: $codigo_final'); window.location.href = 'panel.php';</script>";
+            echo "<script>alert('¡Registrado! Tu Código de Vinculación para tus trabajadores es: $codigo_final'); window.location.href = 'login.php';</script>";
         } else {
-            echo "<script>alert('¡Cuenta de Trabajador enlazada con éxito!'); window.location.href = 'panel.php';</script>";
+            echo "<script>alert('¡Cuenta de Trabajador enlazada con éxito!'); window.location.href = 'login.php';</script>";
         }
         exit();
     } else {
