@@ -18,7 +18,9 @@ $resultado = $conn->query($sql);
 if ($resultado && $resultado->num_rows > 0) {
 
     $usuario = $resultado->fetch_assoc();
-
+echo "Contraseña escrita: [" . $password . "]<br>";
+echo "Contraseña BD: [" . $usuario['contrasena'] . "]";
+exit();
     echo "<pre>";
     print_r($usuario);
     echo "</pre>";
