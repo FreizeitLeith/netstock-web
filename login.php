@@ -17,13 +17,13 @@
                 <p class="auth-subtitle">Accede para administrar el inventario de tu negocio.</p>
             </div>
 
-            <form action="procesar_login.php" method="POST" class="auth-form">
+            <form action="general/seguridad.php" method="POST" class="auth-form"ñ>
                 
                 <div class="input-group">
-                    <label for="email">Correo electrónico</label>
+                    <label for="correo">Correo electrónico</label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-envelope input-icon"></i>
-                        <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" required>
                     </div>
                 </div>
 
@@ -35,7 +35,13 @@
                         <i class="fa-solid fa-eye toggle-password" id="btnTogglePassword"></i>
                     </div>
                 </div>
+<?php if(isset($_GET['error'])): ?>
 
+<div class="error-box">
+    Correo o contraseña incorrectos.
+</div>
+
+<?php endif; ?>
                 <button type="submit" class="btn-submit w-100">Iniciar sesión</button>
 
                 <p class="auth-footer-text">
