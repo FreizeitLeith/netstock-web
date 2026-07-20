@@ -11,9 +11,25 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $correo = trim($_POST['correo']);
 $password = trim($_POST['password']);
 
-echo "Correo recibido: " . $correo . "<br>";
-echo "Contraseña recibida: " . $password . "<br>";
-exit();
+$sql = "SELECT * FROM usuario WHERE correo = '$correo'";
+
+$resultado = $conn->query($sql);
+
+if ($resultado && $resultado->num_rows > 0) {
+
+    $usuario = $resultado->fetch_assoc();
+
+    echo "<pre>";
+    print_r($usuario);
+    echo "</pre>";
+    exit();
+
+} else {
+
+    echo "No existe ese correo.";
+    exit();
+
+}
 
 $sql = "SELECT * FROM usuario
         WHERE correo='$correo'
