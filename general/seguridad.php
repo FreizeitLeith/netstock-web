@@ -4,7 +4,7 @@ require_once 'conexion.php';
 
 // Verificar que la petición venga del formulario
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
-    header("Location: panel.php");
+    header("Location: ../login.php");
     exit();
 }
 
