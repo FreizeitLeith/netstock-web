@@ -130,6 +130,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['enviar_ticket'])) {
             gap: 10px;
             font-weight: 500;
         }
+        /* Fuerza el color de fondo y texto para el selector en navegadores oscuros */
+        select.modern-input {
+            background-color: var(--bg-color) !important;
+            color: #ffffff !important;
+        }
+
+        /* Cambia el color de fondo de las opciones dentro del desplegable */
+        select.modern-input option {
+            background-color: var(--surface-color);
+            color: #ffffff;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
