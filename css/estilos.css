@@ -410,3 +410,9 @@ footer {
     .hero-list { justify-content: center; }
     .hero-buttons { justify-content: center; flex-wrap: wrap; }
 }
+/* Esto hace que si tienes 4 tarjetas en fila, se conviertan en 1 columna en móviles */
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}

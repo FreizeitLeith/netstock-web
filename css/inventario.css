@@ -83,3 +83,15 @@
     margin-left: 10px;
     font-size: 0.95rem;
 }
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr { 
+        display: block; 
+    }
+    thead { display: none; } /* Ocultamos los encabezados de tabla grandes */
+    tr { margin-bottom: 15px; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; }
+    td { text-align: right; position: relative; padding-left: 50%; }
+    td::before { 
+        content: attr(data-label); /* Usa los atributos data-label que pusimos en listar.php */
+        position: absolute; left: 10px; font-weight: bold; 
+    }
+}
