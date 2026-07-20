@@ -88,8 +88,7 @@ $resultado = $conn->query($sql);
             <div class="page-header">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <h2 style="margin: 0; font-size: 1.8rem;">Productos</h2>
-                </div>
-                <div class="legend-container" style="background-color: rgba(0, 0, 0, 0.15); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
+<div class="legend-container" style="background-color: rgba(0, 0, 0, 0.15); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 25px;">
     <h4 style="margin-top: 0; color: var(--primary-color); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
         <i class="fa-solid fa-circle-info"></i> Guía de Botones y Acciones
     </h4>
@@ -108,6 +107,13 @@ $resultado = $conn->query($sql);
                 <i class="fa-solid fa-plus"></i> Nuevo
             </span>
             <span style="color: var(--text-muted);">Añadir un artículo al catálogo.</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="background-color: transparent; border: 1px solid #eab308; color: #eab308; padding: 4px 10px; border-radius: 4px; font-weight: bold;">
+                <i class="fa-solid fa-folder-plus"></i> Categorías
+            </span>
+            <span style="color: var(--text-muted);">Agrupar productos para organizar y filtrar tu stock.</span>
         </div>
         
         <div style="display: flex; align-items: center; gap: 10px;">
