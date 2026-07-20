@@ -44,7 +44,7 @@ if (!isset($_SESSION['rol'])) {
 <body>
 
     <div class="mobile-header">
-        <span style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color);">NetStock</span>
+        <a href="../index.php" style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color); text-decoration: none;">NetStock</a>
         <button class="menu-toggle-btn" id="open-menu"><i class="fa-solid fa-bars"></i></button>
     </div>
 
@@ -52,14 +52,16 @@ if (!isset($_SESSION['rol'])) {
         
         <div class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <span><i class="fa-solid fa-layer-group" style="margin-right: 8px;"></i> NetStock</span>
+                <a href="../index.php" style="color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-layer-group"></i> NetStock
+                </a>
                 <button class="menu-toggle-btn" id="close-menu" style="display: none;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="sidebar-user">
-                <i class="fa-solid fa-circle-user" style="font-size: 2rem; color: var(--primary-color);"></i>
+                <i class="fa-solid fa-circle-user" style="font-size: 2.2rem; color: var(--primary-color);"></i>
                 <div>
-                    <div style="font-weight: bold; color: var(--text-main);"><?php echo $_SESSION['nombre']; ?></div>
+                    <div style="font-weight: bold; color: var(--text-main); word-break: break-word;"><?php echo $_SESSION['nombre']; ?></div>
                     <div class="badge"><?php echo $_SESSION['rol']; ?></div>
                 </div>
             </div>
@@ -68,7 +70,7 @@ if (!isset($_SESSION['rol'])) {
                 <li><a href="../productos/listar.php"><i class="fa-solid fa-box"></i> Inventario</a></li>
                 
                 <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Jefe'): ?>
-                   <li><a href="../movimientos/historial.php"><i class="fa-solid fa-clock-rotate-left"></i> Historial</a></li>
+                    <li><a href="../movimientos/historial.php"><i class="fa-solid fa-clock-rotate-left"></i> Historial</a></li>
                 <?php endif; ?>
 
                    <li><a href="../general/configuracion.php"><i class="fa-solid fa-gear"></i> Soporte</a></li>
@@ -76,7 +78,7 @@ if (!isset($_SESSION['rol'])) {
             </ul>
 
             <div class="sidebar-footer">
-                <a href="../login.php" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+                <a href="../login.php" class="btn-logout" style="text-decoration: none; color: var(--text-muted); display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
             </div>
         </div>
 
@@ -143,13 +145,12 @@ if (!isset($_SESSION['rol'])) {
         const openBtn = document.getElementById('open-menu');
         const closeBtn = document.getElementById('close-menu');
 
-        // Función para adaptar los botones según el tamaño de pantalla
         function checkScreenSize() {
             if (window.innerWidth <= 768) {
                 closeBtn.style.display = 'block';
             } else {
                 closeBtn.style.display = 'none';
-                sidebar.classList.remove('active'); // Asegura que no se quede pegado al rotar pantalla
+                sidebar.classList.remove('active'); 
             }
         }
 
@@ -161,12 +162,9 @@ if (!isset($_SESSION['rol'])) {
             sidebar.classList.remove('active');
         });
 
-        // Escuchar cambios en el tamaño de la pantalla
         window.addEventListener('resize', checkScreenSize);
-        checkScreenSize(); // Ejecutar al cargar
+        checkScreenSize(); 
 
-        
-        // Como el sistema es oscuro por defecto, solo verificamos si el usuario prefirió el claro
         if(localStorage.getItem('tema') === 'claro') {
             document.documentElement.setAttribute('data-theme', 'light');
         }
